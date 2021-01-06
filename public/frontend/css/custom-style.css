@@ -1,0 +1,96 @@
+/* your custom style goes here */
+
+.top-navbar {
+    background: #2385C7;
+    border-bottom: 1px solid #2385C7;
+}
+ul.inline-links > li, ul.inline-links > li > a {
+    color: #fff;
+}
+
+.logo-bar-area {
+    border-bottom: 1px solid #fff;
+    background-color: #fff;
+	padding: 10px 0;
+}
+
+.logo-bar-icons .nav-search-box .nav-box-icon,
+.logo-bar-icons .nav-compare-box .nav-box-icon,
+.logo-bar-icons .nav-wishlist-box .nav-box-icon,
+.logo-bar-icons .nav-cart-box .nav-box-icon {
+    color: #EB2329;
+}
+
+.footer {
+    background: #fff;
+}
+.footer .footer-bottom {
+    background: #fff;
+}
+.footer .footer-bottom .row {
+    align-items: center;
+}
+.footer .copy-links li,
+.footer .copy-links li a {
+    color: #000;
+}
+.logo-bar-area .navbar-brand img {
+
+    max-height: 50px;
+}
+.bottom-seo h1, .bottom-seo .bottom-seo-small-title {
+    font-size: 16px;
+    line-height: 20px;
+    margin: 5px 0px 5px 0px;
+}
+ .padding0 {
+    padding: 0;
+}
+.col-xs-12 {
+    width: 100%;
+}
+
+.fixedWidthSubCont {
+    width: 1200px;
+    margin: 0 auto;
+    padding: 0;
+}
+.bottom-seo {
+    font-size: 12px;
+}
+.affiliates, .affiliates a {
+    color: #fff;
+    background-color: #777;
+    font-size: 12px;
+    line-height: 1.2;
+	border-top: .03125rem solid rgba(0,0,0,.1);
+}
+.category-sidebar{
+    height: 100%;
+}
+.flash-deal-item{
+    margin-bottom: 0;
+    margin-right: 20px;
+    overflow: visible;
+}
+.category-sidebar .categories > li > a{
+    font-size: 13px;
+    font-weight: bold;
+}
+.category-sidebar .categories > li {
+    border-bottom: 1px solid #d4eeff;
+}
+.overflow-auto{
+    overflow: auto;
+}
+.media-banner .banner-container img{
+    width: 100%;
+}
+a:hover{
+    color: #EB2329!important;
+}
+
+.gry-bg {
+    background-color: #fff;
+}
+
