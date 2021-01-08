@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-hi
     <div class="col-lg-8 col-lg-offset-2">
         <div class="panel">
             <div class="panel-heading">

@@ -76,9 +76,17 @@
                                         @foreach (Auth::user()->addresses as $key => $address)
                                             <div class="col-md-6">
                                                 <label class="aiz-megabox d-block bg-white">
-                                                    <input type="radio" name="address_id" value="{{ $address->id }}" @if ($address->set_default)
+                                                    <input type="radio" onclick="" name="address_id" value="{{ $address->id }}" @if ($address->set_default)
                                                         checked
                                                     @endif required>
+                                                    @php
+                                                    // \App\Country::where('status', 1)->get()
+                                                    $district=\App\District::where('id', $address->district_id)->first()->name;
+                                                    // dd(\App\District::where('id', 1)->get('name'));
+                                                    // $district= District::all();
+                                                    // dd($district->name);
+                                                    // dd($address->district_id);
+                                                    @endphp
                                                     <span class="d-flex p-3 aiz-megabox-elem">
                                                         <span class="aiz-rounded-check flex-shrink-0 mt-1"></span>
                                                         <span class="flex-grow-1 pl-3">
@@ -87,8 +95,8 @@
                                                                 <span class="strong-600 ml-2">{{ $address->address }}</span>
                                                             </div>
                                                             <div>
-                                                                <span class="alpha-6">Postal Code:</span>
-                                                                <span class="strong-600 ml-2">{{ $address->postal_code }}</span>
+                                                                <span class="alpha-6">District:</span>
+                                                                <span class="strong-600 ml-2"> {{ $district }}</span>
                                                             </div>
                                                             <div>
                                                                 <span class="alpha-6">City:</span>
@@ -163,7 +171,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group has-feedback">
@@ -249,10 +256,15 @@
                         </div>
                         <div class="row">
                             <div class="col-md-2">
-                                <label>{{__('Postal code')}}</label>
+                                <label>{{__('Address')}}</label>
                             </div>
-                            <div class="col-md-10">
-                                <input type="text" class="form-control mb-3" placeholder="{{__('Your Postal Code')}}" name="postal_code" value="" required>
+                            <div class="col-md-10 mb-2">
+                              <select name="district" id="district" class="form-control">
+                                  <option value="#">Choose District </option>
+                                  @foreach (\App\District::all() as $district)
+                                  <option value="{{ $district->id }}">{{ $district->name }} </option>
+                                  @endforeach
+                              </select>
                             </div>
                         </div>
                         <div class="row">
@@ -282,3 +294,4 @@
     }
 </script>
 @endsection
+

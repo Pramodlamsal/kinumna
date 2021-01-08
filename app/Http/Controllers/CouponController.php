@@ -82,6 +82,7 @@ class CouponController extends Controller
               $data['min_buy'] = $request->min_buy;
               $data['max_discount'] = $request->max_discount;
               $coupon->details = json_encode($data);
+            //   dd($coupon);
               if ($coupon->save()) {
                   flash('Coupon has been saved successfully')->success();
                   return redirect()->route('coupon.index');

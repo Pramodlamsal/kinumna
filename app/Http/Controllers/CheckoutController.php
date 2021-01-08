@@ -33,6 +33,7 @@ class CheckoutController extends Controller
     //check the selected payment gateway and redirect to that controller accordingly
     public function checkout(Request $request)
     {
+        // dd('hk');
         if ($request->payment_option != null) {
 
             $orderController = new OrderController;
@@ -238,10 +239,12 @@ class CheckoutController extends Controller
 
         $total = $subtotal + $tax + $shipping;
 
+        // dd($total);
+
         if(Session::has('coupon_discount')){
                 $total -= Session::get('coupon_discount');
         }
-
+        
         return view('frontend.delivery_info');
         // return view('frontend.payment_select', compact('total'));
     }
@@ -355,9 +358,14 @@ class CheckoutController extends Controller
                             elseif ($coupon->discount_type == 'amount') {
                                 $coupon_discount = $coupon->discount;
                             }
+                            // dd($subtotal);
+                            // dd($coupon_details->min_buy);
+                            // dd($coupon_discount);
+                            // dd($request->session()->all());
                             $request->session()->put('coupon_id', $coupon->id);
                             $request->session()->put('coupon_discount', $coupon_discount);
                             flash('Coupon has been applied')->success();
+                            
                         }
                     }
                     elseif ($coupon->type == 'product_base')

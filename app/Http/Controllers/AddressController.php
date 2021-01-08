@@ -45,7 +45,7 @@ class AddressController extends Controller
             'address' => 'required|string',
             'country' => 'required|string',
             'city' => 'required|string',
-            'postal_code' => 'required|string',
+            // 'postal_code' => 'required|string',
             'phone' => 'required|int'
             ]);
         $address = new Address;
@@ -53,8 +53,10 @@ class AddressController extends Controller
         $address->address = $request->address;
         $address->country = $request->country;
         $address->city = $request->city;
-        $address->postal_code = $request->postal_code;
+        // $address->postal_code = $request->postal_code;
         $address->phone = $request->phone;
+        $address->district_id = $request->district;
+        // dd($address);
         $address->save();
 
     //   return response()->json([

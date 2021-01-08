@@ -78,7 +78,12 @@
                                         <tr>
                                             <th class="product-image"></th>
                                             <th class="product-name">{{__('Product')}}</th>
-                                            <th class="product-price d-none d-lg-table-cell">{{__('Price')}}</th>
+                                            <div class="col-md-6">
+                                                <div class="form-group has-feedback">
+                                                    <label class="control-label">{{__('Postal code')}}</label>
+                                                    <input type="number" min="0" class="form-control" placeholder="{{__('Postal code')}}" name="postal_code" required>
+                                                </div>
+                                            </div>                <th class="product-price d-none d-lg-table-cell">{{__('Price')}}</th>
                                             <th class="product-quanity d-none d-md-table-cell">{{__('Quantity')}}</th>
                                             <th class="product-total">{{__('Total')}}</th>
                                             <th class="product-remove"></th>

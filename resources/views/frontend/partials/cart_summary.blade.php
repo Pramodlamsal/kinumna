@@ -22,7 +22,9 @@
                 @php
                     $product = \App\Product::find($cartItem['id']);
                     $total_point += $product->earn_point*$cartItem['quantity'];
+                    // dd($product);
                 @endphp
+
             @endforeach
             <div class="club-point mb-3 bg-soft-base-1 border-light-base-1 border">
                 {{ __("Total Club point") }}:
@@ -44,6 +46,9 @@
                     if (\App\BusinessSetting::where('type', 'shipping_type')->first()->value == 'flat_rate') {
                         $shipping = \App\BusinessSetting::where('type', 'flat_rate_shipping_cost')->first()->value;
                     }
+                    // dd(Session::get('cart'));
+                    // session::get('cart')->shipping = 10;
+                    // dd(Session::get('cart'));
                     $admin_products = array();
                     $seller_products = array();
                 @endphp
@@ -105,7 +110,20 @@
                         <span class="strong-600">{{ single_price($subtotal) }}</span>
                     </td>
                 </tr>
+@php
+// dd(session()->all());
+if(session()->get('coupon_id')){
+    $id = session()->get('coupon_id');
+$coupon_minum = json_decode(App\ Coupon::where('id',$id)->first()->details);
+$minumnAmount = $coupon_minum->min_buy;
 
+
+// dd($minumnAmount);
+if($minumnAmount>=$subtotal){
+    Session::forget('coupon_discount');
+}
+}
+@endphp
                 <tr class="cart-shipping">
                     <th>{{__('Tax')}}</th>
                     <td class="text-right">
@@ -130,6 +148,7 @@
                 @endif
 
                 @php
+
                     $total = $subtotal+$tax+$shipping;
                     if(Session::has('coupon_discount')){
                         $total -= Session::get('coupon_discount');
