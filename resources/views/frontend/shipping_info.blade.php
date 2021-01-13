@@ -76,7 +76,7 @@
                                         @foreach (Auth::user()->addresses as $key => $address)
                                             <div class="col-md-6">
                                                 <label class="aiz-megabox d-block bg-white">
-                                                    <input type="radio" onclick="" name="address_id" value="{{ $address->id }}" @if ($address->set_default)
+                                                    <input type="radio"  name="address_id" value="{{ $address->id }}" data-district="{{ $address->district_id }}" @if ($address->set_default)
                                                         checked
                                                     @endif required>
                                                     @php
@@ -291,6 +291,33 @@
 <script type="text/javascript">
     function add_new_address(){
         $('#new-address-modal').modal('show');
+    }
+
+    $('input[type=radio').click(function(e) {
+        let districtId = e.target.dataset.district;
+        let renderPrice = function (price) {
+            $('#shipping_price').html(createShippingLabel(price));
+            let total = $('#totalPrice').attr('data-total');
+            console.log(total, price);
+            $("#totalPrice").text((parseFloat(total) + parseFloat(price)));
+        }
+        let price = getShippingPrice(districtId, renderPrice);
+    })
+    function getShippingPrice(districtId, callback) {
+        $.get(`/shipping-price/district/${districtId}`, function(data, status) {
+            let price =  data.price;
+            callback(price);
+        });
+    }
+
+    function createShippingLabel(price) {
+        let label = `
+                    <th>Total Shipping</th>
+                    <td class="text-right">
+                        <span class="text-italic">${price}</span>
+                    </td>
+        `;
+        return label;
     }
 </script>
 @endsection

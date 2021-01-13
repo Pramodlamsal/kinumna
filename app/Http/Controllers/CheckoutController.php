@@ -20,6 +20,7 @@ use App\Coupon;
 use App\CouponUsage;
 use App\User;
 use App\Address;
+use App\District;
 use Session;
 
 class CheckoutController extends Controller
@@ -412,4 +413,11 @@ class CheckoutController extends Controller
         $order = Order::findOrFail(Session::get('order_id'));
         return view('frontend.order_confirmed', compact('order'));
     }
+
+    public function getShippingPriceBasedOnDistrict(District $district )
+    {
+        return response()->json(['price' => $district->shipping_charge]);
+    }
+
+    
 }
