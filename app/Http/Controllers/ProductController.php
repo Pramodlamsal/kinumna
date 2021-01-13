@@ -111,6 +111,7 @@ class ProductController extends Controller
         $product->added_by = $request->added_by;
         if(Auth::user()->user_type == 'seller'){
             $product->user_id = Auth::user()->id;
+            $product->published = '0';
         }
         else{
             $product->user_id = \App\User::where('user_type', 'admin')->first()->id;

@@ -460,6 +460,11 @@
                                         <a class="nav-link" href="{{route('countries.index')}}">{{__('Shipping Countries')}}</a>
                                     </li>
                                 </li>
+                                <li>
+                                    <li class="{{ areActiveRoutes(['districts.index','districts.edit','districts.update'])}}">
+                                        <a class="nav-link" href="{{route('districts.index')}}">{{__('Shipping Districts')}}</a>
+                                    </li>
+                                </li>
                             </ul>
                         </li>
                         @endif

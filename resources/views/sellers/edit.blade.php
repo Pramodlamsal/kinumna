@@ -27,6 +27,12 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label class="col-sm-3 control-label" for="phone">{{__('Contact Number')}}</label>
+                    <div class="col-sm-9">
+                        <input type="text" placeholder="{{__('Contact Number')}}" id="phone" name="phone" class="form-control" value="{{$seller->user->phone}}" required>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="col-sm-3 control-label" for="password">{{__('Password')}}</label>
                     <div class="col-sm-9">
                         <input type="password" placeholder="{{__('Password')}}" id="password" name="password" class="form-control">

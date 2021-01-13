@@ -13,6 +13,13 @@
             	@csrf
                 <div class="panel-body">
                     <div class="form-group">
+                        <label class="col-lg-3 control-label" for="phone">{{__('Contact Number')}}</label>
+                        <div class="col-lg-9">
+                            <input type="number" value="{{ $customer->user->phone }}" name="phone" id="phone" class="form-control"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
                         <label class="col-lg-3 control-label" for="email">{{__('Customer Email')}}</label>
                         <div class="col-lg-9">
                             <input type="email" value="{{ $customer->user->email }}" name="email" id="email" class="form-control"/>

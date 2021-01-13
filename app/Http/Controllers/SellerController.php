@@ -65,6 +65,7 @@ class SellerController extends Controller
         $user = new User;
         $user->name = $request->name;
         $user->email = $request->email;
+        $user->phone = $request->phone;
         $user->user_type = "seller";
         $user->password = Hash::make($request->password);
         if($user->save()){
@@ -120,6 +121,7 @@ class SellerController extends Controller
         $user = $seller->user;
         $user->name = $request->name;
         $user->email = $request->email;
+        $user->phone = $request->phone;
         if(strlen($request->password) > 0){
             $user->password = Hash::make($request->password);
         }

@@ -152,7 +152,7 @@ if($minumnAmount>=$subtotal){
                 <tr class="cart-total">
                     <th><span class="strong-600">{{__('Total')}}</span></th>
                     <td class="text-right">
-                        <strong><span id="totalPrice" data-total="{{ ($totall) }}">{{ single_price($total) }}</span></strong>
+                        <strong><span id="totalPrice" data-total="{{ ($total) }}">{{ single_price($total) }}</span></strong>
                     </td>
                 </tr>
             </tfoot>

@@ -65,6 +65,20 @@
                                         <div class="row">
                                             <div class="col-12">
                                                 <div class="form-group">
+                                                    <!-- <label>{{ __('Phone Number') }}</label> -->
+                                                    <div class="input-group input-group--style-1">
+                                                        <input type="number" class="form-control{{ $errors->has('phone') ? ' is-invalid' : '' }}" value="{{ old('phone') }}" placeholder="{{ __('Contact Number') }}" name="phone">
+                                                        <span class="input-group-addon">
+                                                            <i class="text-md la la-phone"></i>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="form-group">
                                                     <!-- <label>{{ __('Password') }}</label> -->
                                                     <div class="input-group input-group--style-1">
                                                         <input type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="{{ __('Password') }}" name="password">

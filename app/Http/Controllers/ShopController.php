@@ -63,6 +63,7 @@ class ShopController extends Controller
                 $user = new User;
                 $user->name = $request->name;
                 $user->email = $request->email;
+                $user->phone = $request->phone;
                 $user->user_type = "seller";
                 $user->password = Hash::make($request->password);
                 $user->save();
