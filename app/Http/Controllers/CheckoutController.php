@@ -21,6 +21,8 @@ use App\CouponUsage;
 use App\User;
 use App\Address;
 use App\District;
+use App\Models\Cart;
+use Illuminate\Support\Facades\Session as FacadesSession;
 use Session;
 
 class CheckoutController extends Controller
@@ -200,6 +202,7 @@ class CheckoutController extends Controller
 
     public function store_shipping_info(Request $request)
     {
+
         if (Auth::check()) {
             if($request->address_id == null){
                 flash("Please add shipping address")->warning();
@@ -232,15 +235,22 @@ class CheckoutController extends Controller
         $subtotal = 0;
         $tax = 0;
         $shipping = 0;
+        $district = $address->district_id;
+        
+
         foreach (Session::get('cart') as $key => $cartItem){
             $subtotal += $cartItem['price']*$cartItem['quantity'];
             $tax += $cartItem['tax']*$cartItem['quantity'];
-            $shipping += $cartItem['shipping']*$cartItem['quantity'];
+            $shipping += District::find($district)->shipping_charge;
         }
+
 
         $total = $subtotal + $tax + $shipping;
 
-        // dd($total);
+        foreach(Session::get('cart') as $key => $item) {
+            $item['shipping'] = $shipping;
+            session()->put('cart',[$key => $item]);
+        }
 
         if(Session::has('coupon_discount')){
                 $total -= Session::get('coupon_discount');
@@ -253,34 +263,34 @@ class CheckoutController extends Controller
     public function store_delivery_info(Request $request)
     {
         if(Session::has('cart') && count(Session::get('cart')) > 0){
-            $cart = $request->session()->get('cart', collect([]));
-            $cart = $cart->map(function ($object, $key) use ($request) {
-                if(\App\Product::find($object['id'])->added_by == 'admin'){
-                    if($request['shipping_type_admin'] == 'home_delivery'){
-                        $object['shipping_type'] = 'home_delivery';
-                        $object['shipping'] = \App\Product::find($object['id'])->shipping_cost;
-                    }
-                    else{
-                        $object['shipping_type'] = 'pickup_point';
-                        $object['pickup_point'] = $request->pickup_point_id_admin;
-                        $object['shipping'] = 0;
-                    }
-                }
-                else{
-                    if($request['shipping_type_'.\App\Product::find($object['id'])->user_id] == 'home_delivery'){
-                        $object['shipping_type'] = 'home_delivery';
-                        $object['shipping'] = \App\Product::find($object['id'])->shipping_cost;
-                    }
-                    else{
-                        $object['shipping_type'] = 'pickup_point';
-                        $object['pickup_point'] = $request['pickup_point_id_'.\App\Product::find($object['id'])->user_id];
-                        $object['shipping'] = 0;
-                    }
-                }
-                return $object;
-            });
+            $cart = collect($request->session()->get('cart'));
+            // $cart = $cart->map(function ($object, $key) use ($request) {
+            //     if(\App\Product::find($object['id'])->added_by == 'admin'){
+            //         if($request['shipping_type_admin'] == 'home_delivery'){
+            //             $object['shipping_type'] = 'home_delivery';
+            //             $object['shipping'] = \App\Product::find($object['id'])->shipping_cost;
+            //         }
+            //         else{
+            //             $object['shipping_type'] = 'pickup_point';
+            //             $object['pickup_point'] = $request->pickup_point_id_admin;
+            //             $object['shipping'] = 0;
+            //         }
+            //     }
+            //     else{
+            //         if($request['shipping_type_'.\App\Product::find($object['id'])->user_id] == 'home_delivery'){
+            //             $object['shipping_type'] = 'home_delivery';
+            //             $object['shipping'] = \App\Product::find($object['id'])->shipping_cost;
+            //         }
+            //         else{
+            //             $object['shipping_type'] = 'pickup_point';
+            //             $object['pickup_point'] = $request['pickup_point_id_'.\App\Product::find($object['id'])->user_id];
+            //             $object['shipping'] = 0;
+            //         }
+            //     }
+            //     return $object;
+            // });
 
-            $request->session()->put('cart', $cart);
+            // $request->session()->put('cart', $cart);
 
             $subtotal = 0;
             $tax = 0;

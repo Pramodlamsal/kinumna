@@ -42,7 +42,7 @@
                 @php
                     $subtotal = 0;
                     $tax = 0;
-                    // $shipping = 0;
+                    $shipping = 0;
                     // if (\App\BusinessSetting::where('type', 'shipping_type')->first()->value == 'flat_rate') {
                     //     $shipping = \App\BusinessSetting::where('type', 'flat_rate_shipping_cost')->first()->value;
                     // }
@@ -68,9 +68,9 @@
                         }
                         $subtotal += $cartItem['price']*$cartItem['quantity'];
                         $tax += $cartItem['tax']*$cartItem['quantity'];
-                        // if (\App\BusinessSetting::where('type', 'shipping_type')->first()->value == 'product_wise_shipping') {
-                        //     $shipping += $cartItem['shipping'];
-                        // }
+
+                            $shipping += $cartItem['shipping'];
+
                         $product_name_with_choice = $product->name;
                         if ($cartItem['variant'] != null) {
                             $product_name_with_choice = $product->name.' - '.$cartItem['variant'];
@@ -114,15 +114,25 @@
 // dd(session()->all());
 if(session()->get('coupon_id')){
     $id = session()->get('coupon_id');
-$coupon_minum = json_decode(App\ Coupon::where('id',$id)->first()->details);
-$minumnAmount = $coupon_minum->min_buy;
+    $coupontype = session()->get('type');
+    // dd($id);
+    // $coupontype= json_decode(App\ Coupon::select()->where('id', $id)->get());
+
+    // dd($coupontype);
+
+    $coupon_detail= json_decode(App\ Coupon::where('id',$id)->first()->details);
+// dd(App\ Coupon::where('id',$id)->first()->details->product_id);
+// dd($coupon_minum);
+if($coupon_detail['0']->product_id==Null){
+$minumnAmount = $coupon_detail->min_buy;
+// $product_id = $coupon_detail->product_id;
 
 
 // dd($minumnAmount);
 if($minumnAmount>=$subtotal){
     Session::forget('coupon_discount');
 }
-}
+}}
 @endphp
                 <tr class="cart-shipping">
                     <th>{{__('Tax')}}</th>
@@ -131,6 +141,12 @@ if($minumnAmount>=$subtotal){
                     </td>
                 </tr>
                 <tr class="cart-shipping" id="shipping_price">
+                    @if($shipping > 0)
+                    <th>{{__('Shipping cost')}}</th>
+                    <td class="text-right">
+                        <span class="text-italic">{{ single_price($shipping) }}</span>
+                    </td>
+                    @endif
                 </tr>
 
                 @if (Session::has('coupon_discount'))
@@ -143,7 +159,8 @@ if($minumnAmount>=$subtotal){
                 @endif
 
                 @php
-                    $total = $subtotal+$tax;
+                // dd(Session::all());
+                    $total = $subtotal+$tax + $shipping;
                     if(Session::has('coupon_discount')){
                         $total -= Session::get('coupon_discount');
                     }
