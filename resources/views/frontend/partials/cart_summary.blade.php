@@ -123,7 +123,7 @@ if(session()->get('coupon_id')){
     $coupon_detail= json_decode(App\ Coupon::where('id',$id)->first()->details);
 // dd(App\ Coupon::where('id',$id)->first()->details->product_id);
 // dd($coupon_minum);
-if($coupon_detail['0']->product_id==Null){
+// if($coupon_detail['0']->product_id==Null){
 $minumnAmount = $coupon_detail->min_buy;
 // $product_id = $coupon_detail->product_id;
 
@@ -132,7 +132,8 @@ $minumnAmount = $coupon_detail->min_buy;
 if($minumnAmount>=$subtotal){
     Session::forget('coupon_discount');
 }
-}}
+// }
+}
 @endphp
                 <tr class="cart-shipping">
                     <th>{{__('Tax')}}</th>
