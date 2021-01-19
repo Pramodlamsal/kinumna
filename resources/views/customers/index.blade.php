@@ -33,6 +33,8 @@
                     <th>{{__('Name')}}</th>
                     <th>{{__('Email Address')}}</th>
                     <th>{{__('Phone')}}</th>
+                    <th>{{__('Mobile')}}</th>
+                    <th>{{__('Created At')}}</th>
                     <th>{{__('Package')}}</th>
                     <th>{{__('Wallet Balance')}}</th>
                     <th width="10%">{{__('Options')}}</th>
@@ -46,6 +48,8 @@
                             <td>{{$customer->user->name}}</td>
                             <td>{{$customer->user->email}}</td>
                             <td>{{$customer->user->phone}}</td>
+                            <td>{{$customer->user->mobile}}</td>
+                            <td>{{$customer->user->created_at}}</td>
                             <td>
                                 @if ($customer->user->customer_package != null)
                                     {{$customer->user->customer_package->name}}

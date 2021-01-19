@@ -60,8 +60,15 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'name' => 'required|string|max:255',
             'password' => 'required|string|min:6|confirmed',
+            'mobile' => 'required_without:phone|nullable|string|max:10|min:10',
+            'phone' => 'required_without:mobile|nullable|string|max:10|min:9',
+            
         ]);
     }
+    // $rules = array(
+    //     'Email' => 'required_without:QQ',
+    //     'QQ' => 'required_without:Email',
+    // );
 
     /**
      * Create a new user instance after a valid registration.
@@ -75,10 +82,12 @@ class RegisterController extends Controller
             $user = User::create([
                 'name' => $data['name'],
                 'phone' => $data['phone'],
+                'mobile' => $data['mobile'],
                 'dob' => $data['dob'],
                 'email' => $data['email'],
                 'password' => Hash::make($data['password']),
             ]);
+            // dd($user);
 
             $customer = new Customer;
             $customer->user_id = $user->id;
@@ -98,7 +107,7 @@ class RegisterController extends Controller
             if (\App\Addon::where('unique_identifier', 'otp_system')->first() != null && \App\Addon::where('unique_identifier', 'otp_system')->first()->activated){
                 $user = User::create([
                     'name' => $data['name'],
-                    'phone' => '+'.$data['country_code'].$data['phone'],
+                    'mobile' => '+'.$data['country_code'].$data['mobile'],
                     'password' => Hash::make($data['password']),
                     'verification_code' => rand(100000, 999999)
                 ]);
@@ -134,8 +143,8 @@ class RegisterController extends Controller
                 return back();
             }
         }
-        elseif (User::where('phone', '+'.$request->country_code.$request->phone)->first() != null) {
-            flash('Phone already exists.');
+        elseif (User::where('mobile', '+'.$request->country_code.$request->mobile)->first() != null) {
+            flash('Mobile already exists.');
             return back();
         }
 

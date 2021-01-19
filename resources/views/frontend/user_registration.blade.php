@@ -32,7 +32,7 @@
 
                                         <div class="form-group">
                                             <div class="input-group input-group--style-1">
-                                                <input type="text" class="form-control{{ $errors->has('phone') ? ' is-invalid' : '' }}" value="{{ old('phone') }}" placeholder="{{ __('Contact Number') }}" name="phone">
+                                                <input type="number" class="form-control{{ $errors->has('phone') ? ' is-invalid' : '' }}" value="{{ old('phone') }}" placeholder="{{ __('Phone Number') }}" name="phone">
                                                 <span class="input-group-addon">
                                                     <i class="text-md la la-phone"></i>
                                                 </span>
@@ -41,7 +41,16 @@
 
                                         <div class="form-group">
                                             <div class="input-group input-group--style-1">
-                                                <input type="date" class="form-control{{ $errors->has('dob') ? ' is-invalid' : '' }}" value="{{ old('dob') }}" placeholder="{{ __('Date Of Birth') }}" name="dob">
+                                                <input type="number" class="form-control{{ $errors->has('mobile') ? ' is-invalid' : '' }}" value="{{ old('mobile') }}" placeholder="{{ __('Mobile Number') }}" name="mobile">
+                                                <span class="input-group-addon">
+                                                    <i class="text-md la la-mobile"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="input-group input-group--style-1">
+                                                <input type="text" onfocus="(this.type='date')" onblur="(this.type='text')" class="form-control{{ $errors->has('dob') ? ' is-invalid' : '' }}" value="{{ old('dob') }}" placeholder="{{ __('Date Of Birth') }}" name="dob">
                                                 <span class="input-group-addon">
                                                     <i class="date-md la la-date"></i>
                                                 </span>

@@ -34,6 +34,13 @@
                         </div>
                     </div>
 
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" for="password">{{__('Password')}}</label>
+                        <div class="col-sm-9">
+                            <input type="password" placeholder="{{__('Password')}}" id="password" name="password" class="form-control">
+                        </div>
+                    </div>
+
                     <div id="customer_form">
 
                     </div>

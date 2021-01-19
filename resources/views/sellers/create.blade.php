@@ -31,6 +31,12 @@
                         <input type="text" placeholder="{{__('Contact Number')}}" id="phone" name="phone" class="form-control" required>
                     </div>
                 </div>
+                {{-- <div class="form-group">
+                    <label class="col-sm-3 control-label" for="mobile">{{__('Mobile Number')}}</label>
+                    <div class="col-sm-9">
+                        <input type="text" placeholder="{{__('Mobile Number')}}" id="mobile" name="mobile" class="form-control" required>
+                    </div>
+                </div> --}}
                 <div class="form-group">
                     <label class="col-sm-3 control-label" for="password">{{__('Password')}}</label>
                     <div class="col-sm-9">

@@ -41,6 +41,7 @@
                     <th>#</th>
                     <th>{{__('Name')}}</th>
                     <th>{{__('Phone')}}</th>
+                    <th>{{__('Mobile')}}</th>
                     <th>{{__('Email Address')}}</th>
                     <th>{{__('Verification Info')}}</th>
                     <th>{{__('Approval')}}</th>
@@ -56,6 +57,7 @@
                             <td>{{ ($key+1) + ($sellers->currentPage() - 1)*$sellers->perPage() }}</td>
                             <td>{{$seller->user->name}}</td>
                             <td>{{$seller->user->phone}}</td>
+                            <td>{{$seller->user->mobile}}</td>
                             <td>{{$seller->user->email}}</td>
                             <td>
                                 @if ($seller->verification_info != null)

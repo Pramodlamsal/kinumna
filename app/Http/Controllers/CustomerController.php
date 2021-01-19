@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Customer;
 use App\User;
 use App\Order;
+use Illuminate\Support\Facades\Hash;
 
 class CustomerController extends Controller
 {
@@ -86,9 +87,23 @@ class CustomerController extends Controller
         $user->name = $request->name;
         $user->email = $request->email;
         $user->phone = $request->phone;
-        $user->update();
+        // $user->phone = $request->password;
+        if(strlen($request->password) > 0){
+            $user->password = Hash::make($request->password);
+        }
+        if($user->save()){
+            if($user->update()){
+                flash(__('Customer has been updated successfully'))->success();
+                return redirect()->route('customers.index');
+            }
+        }
 
-        return redirect()->route('customers.index');    }
+        flash(__('Something went wrong'))->error();
+        return back();
+        // $user->update();
+
+        // return redirect()->route('customers.index');  
+      }
 
     public function destroy($id)
     {

@@ -32,6 +32,7 @@ class UserController extends Controller
             'city' => $request->city,
             'country' => $request->country,
             'phone' => $request->phone,
+            // 'mobile' => $request->mobile,
             'postal_code' => $request->postal_code
         ]);
         return response()->json([
