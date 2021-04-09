@@ -29,6 +29,7 @@
                     <th>Num. of Products</th>
                     <th>Customer</th>
                     <th>Amount</th>
+                    <th>Order Placed At</th>
                     <th>Delivery Status</th>
                     <th>Payment Status</th>
                     @if ($refund_request_addon != null && $refund_request_addon->activated == 1)
@@ -60,14 +61,17 @@
                             {{ single_price($order->grand_total) }}
                         </td>
                         <td>
+                            {{ $order->created_at }}
+                        </td>
+                        <td>
 @php
-                                
+
                                 foreach ($order->orderDetails as $key => $orderDetail) {
                                      $status = $orderDetail->delivery_status;
-                                       
+
                                 }
                             @endphp
-                            
+
                             {{ $status }}             </td>
                         <td>
                             <span class="badge badge--2 mr-4">

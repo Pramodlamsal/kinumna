@@ -124,6 +124,7 @@ class SellerController extends Controller
         $user->name = $request->name;
         $user->email = $request->email;
         $user->phone = $request->phone;
+        $user->mobile = $request->mobile;
         if(strlen($request->password) > 0){
             $user->password = Hash::make($request->password);
         }

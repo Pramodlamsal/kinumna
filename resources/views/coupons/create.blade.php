@@ -18,6 +18,7 @@
                                 <option value="">Select One</option>
                                 <option value="product_base">{{__('For Products')}}</option>
                                 <option value="cart_base">{{__('For Total Orders')}}</option>
+                                <option value="category_base">{{__('For Categories')}}</option>
                             </select>
                         </div>
                     </div>

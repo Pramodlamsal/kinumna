@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\District;
+use App\Address;
 use App\Homedistrict;
 use App\Product;
 use App\Language;
@@ -19,12 +20,13 @@ class districtController extends Controller
     {
         // dd('kj');
         $sort_search =null;
-        $districts = district::orderBy('created_at', 'desc');
+        $districts = district::orderBy('name', 'asc');
         if ($request->has('search')){
             $sort_search = $request->search;
-            $districts = $districts->where('name', 'like', '%'.$sort_search.'%');
+            $districts = $districts->where('name', 'like', '%'.$sort_search.'%')->get();
+        
         }
-        $districts = $districts->paginate(15);
+$districts = $districts->get();
         return view('districts.index', compact('districts', 'sort_search'));
     }
 
@@ -146,9 +148,11 @@ class districtController extends Controller
     {
         // dd($id);
         $district = district::findOrFail($id);
-     
+    //  dd($district);
 
-        District::where('id', $district->id)->delete();
+        if(District::where('id', $district->id)->delete()){
+            Address::where('district_id', $id)->delete();
+        }
         // Homedistrict::where('district_id', $district->id)->delete();
 
         if(district::destroy($id)){

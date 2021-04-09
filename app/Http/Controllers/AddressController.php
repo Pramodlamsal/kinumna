@@ -40,25 +40,28 @@ class AddressController extends Controller
      */
     public function store(Request $request)
     {
-       
+      
         $this->validate($request,[
             'address' => 'required|string',
-            'country' => 'required|string',
+            // 'country' => 'required|string',
             'city' => 'required|string',
-            // 'postal_code' => 'required|string',
-            'phone' => 'required|int'
+            'district' => 'required|string',
+            'landmark' => 'required|string',
+            'phone' => 'required|max:10|min:10'
             ]);
+            // dd('hj');
         $address = new Address;
         $address->user_id = Auth::user()->id;
         $address->address = $request->address;
-        $address->country = $request->country;
+        $address->landmark = $request->landmark;
+        // $address->country = $request->country;
         $address->city = $request->city;
         // $address->postal_code = $request->postal_code;
         $address->phone = $request->phone;
         $address->district_id = $request->district;
         // dd($address);
         $address->save();
-
+// dd('test');
     //   return response()->json([
     //         'success' => true,
     //         'message' => 'Your address has been added'

@@ -65,7 +65,8 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => env('APP_TIMEZONE', 'Asia/Kathmandu'),
+
 
     /*
     |--------------------------------------------------------------------------
@@ -168,6 +169,9 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        \Maatwebsite\Excel\ExcelServiceProvider::class, 
+        // Yajra\DataTables\DataTablesServiceProvider::class,
+	    // Yajra\DataTables\ButtonsServiceProvider::class,
 
     ],
 
@@ -224,6 +228,7 @@ return [
         'Nexmo' => Nexmo\Laravel\Facade\Nexmo::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'PaytmWallet' => Anand\LaravelPaytmWallet\Facades\PaytmWallet::class,
+        // 'DataTables' => Yajra\DataTables\Facades\DataTables::class,
     ],
 
 ];

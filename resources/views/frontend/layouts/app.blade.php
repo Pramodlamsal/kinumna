@@ -84,6 +84,8 @@
 <!-- Custom style -->
 <link type="text/css" href="{{ asset('frontend/css/custom-style.css') }}" rel="stylesheet" media="all">
 
+@yield('styles')
+
 <!-- jQuery -->
 <script src="{{ asset('frontend/js/vendor/jquery.min.js') }}"></script>
 
@@ -293,8 +295,8 @@
         });
     }
 
-    function removeFromCart(key){
-        $.post('{{ route('cart.removeFromCart') }}', {_token:'{{ csrf_token() }}', key:key}, function(data){
+    function removeFromCart(key,id){
+        $.post('{{ route('cart.removeFromCart') }}', {_token:'{{ csrf_token() }}', key:key,id:id}, function(data){
             updateNavCart();
             $('#cart-summary').html(data);
             showFrontendAlert('success', 'Item has been removed from cart');

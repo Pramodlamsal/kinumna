@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-
     <div class="panel">
     	<div class="panel-body">
     		<div class="invoice-masthead">
@@ -15,7 +14,7 @@
         				<strong class="text-main">{{ json_decode($order->shipping_address)->name }}</strong><br>
                          {{ json_decode($order->shipping_address)->email }}<br>
                          {{ json_decode($order->shipping_address)->phone }}<br>
-        				 {{ json_decode($order->shipping_address)->address }}, {{ json_decode($order->shipping_address)->city }}, {{ json_decode($order->shipping_address)->country }}
+        				 {{ @json_decode($order->shipping_address)->landmark }}, {{ json_decode($order->shipping_address)->address }}, {{ json_decode($order->shipping_address)->city }}
                     </address>
                     @if ($order->manual_payment && is_array(json_decode($order->manual_payment_data, true)))
                         <br>
@@ -44,13 +43,15 @@
                     $delivery_status = $order->orderDetails->first()->delivery_status;
                     $payment_status = $order->orderDetails->first()->payment_status;
                 @endphp
-                
+
     					<td class="text-right">
                           <select class="form-control demo-select2" name="delivery_status" id="update_delivery_status">
-                            <option value="pending"   @isset($delivery_status) @if($delivery_status == 'pending') selected @endif @endisset>{{__('Pending')}}</option>
+                            <option value="order received"   @isset($delivery_status) @if($delivery_status == 'order received') selected @endif @endisset>{{__('order received')}}</option>
                             <option value="on_review"   @isset($delivery_status) @if($delivery_status == 'on_review') selected @endif @endisset>{{__('On review')}}</option>
                             <option value="on_delivery"   @isset($delivery_status) @if($delivery_status == 'on_delivery') selected @endif @endisset>{{__('On delivery')}}</option>
                             <option value="delivered"   @isset($delivery_status) @if($delivery_status == 'delivered') selected @endif @endisset>{{__('Delivered')}}</option>
+                            <option value="cancelled"   @isset($delivery_status) @if($delivery_status == 'cancelled') selected @endif @endisset>{{__('Cancelled')}}</option>
+
                         </select>
     					</td>
     				</tr>
@@ -133,14 +134,14 @@
                 					</td>
                 					<td>
                                         @if ($orderDetail->product != null)
-                                            
                                             <strong>{{ $orderDetail->variation }}</strong>
                                         @else
                                             <strong>{{ __('Product Unavailable') }}</strong>
                                         @endif
                                     </td>
                                     <td>
-                                        @if ($orderDetail->shipping_type != null && $orderDetail->shipping_type == 'home_delivery')
+                                        {{ __('Home Delivery') }}
+                                        {{-- @if ($orderDetail->shipping_type != null && $orderDetail->shipping_type == 'home_delivery')
                                             {{ __('Home Delivery') }}
                                         @elseif ($orderDetail->shipping_type == 'pickup_point')
                                             @if ($orderDetail->pickup_point != null)
@@ -148,7 +149,7 @@
                                             @else
                                                 {{ __('Pickup Point') }}
                                             @endif
-                                        @endif
+                                        @endif --}}
                                     </td>
                 					<td class="text-center">
                 						{{ $orderDetail->quantity }}
@@ -197,7 +198,7 @@
     					<strong>{{__('Shipping')}} :</strong>
     				</td>
     				<td>
-    					{{ single_price($order->orderDetails->sum('shipping_cost')) }}
+    					{{ single_price($order->orderDetails->first()->shipping_cost) }}
     				</td>
     			</tr>
     			<tr>
@@ -217,7 +218,7 @@
     	</div>
     </div>
 @endsection
-      
+
 @section('script')
     <script type="text/javascript">
         $('#update_delivery_status').on('change', function(){

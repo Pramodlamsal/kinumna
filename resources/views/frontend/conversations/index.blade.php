@@ -33,7 +33,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="card no-border mt-4 p-3">
                             <div class="py-4">
                                 @foreach ($conversations as $key => $conversation)

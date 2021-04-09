@@ -5,7 +5,7 @@
     <div class="col-lg-8 col-lg-offset-2">
         <div class="panel">
             <div class="panel-heading">
-                <h3 class="panel-title">{{__('customer Information Update')}}</h3>
+                <h3 class="panel-title">{{__('Customer Information Update')}}</h3>
             </div>
 
             <form class="form-horizontal" action="{{ route('customers.update', $customer->id) }}" method="POST" enctype="multipart/form-data">
@@ -13,9 +13,16 @@
             	@csrf
                 <div class="panel-body">
                     <div class="form-group">
-                        <label class="col-lg-3 control-label" for="phone">{{__('Contact Number')}}</label>
+                        <label class="col-lg-3 control-label" for="phone">{{__('Phone Number')}}</label>
                         <div class="col-lg-9">
                             <input type="number" value="{{ $customer->user->phone }}" name="phone" id="phone" class="form-control"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label" for="mobile">{{__('Mobile Number')}}</label>
+                        <div class="col-lg-9">
+                            <input type="number" value="{{ $customer->user->mobile }}" name="mobile" id="mobile" class="form-control"/>
                         </div>
                     </div>
 

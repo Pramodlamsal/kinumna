@@ -8,7 +8,9 @@ use App\SubSubCategory;
 use App\Category;
 use Session;
 use App\Color;
+use App\Coupon;
 use Cookie;
+use Illuminate\Support\Facades\Session as FacadesSession;
 
 class CartController extends Controller
 {
@@ -48,7 +50,7 @@ class CartController extends Controller
             //Gets all the choice values of customer choice option and generate a string like Black-S-Cotton
             foreach (json_decode(Product::find($request->id)->choice_options) as $key => $choice) {
                 if($str != null){
-                    $str .= '-'.str_replace(' ', '', $request['attribute_id_'.$choice->attribute_id]);
+                    $str .= '-'.str_replace(' ', '', $request['attribute_id_    '.$choice->attribute_id]);
                 }
                 else{
                     $str .= str_replace(' ', '', $request['attribute_id_'.$choice->attribute_id]);
@@ -154,26 +156,41 @@ class CartController extends Controller
     //removes from Cart
     public function removeFromCart(Request $request)
     {
+        
         if($request->session()->has('cart')){
             $cart = $request->session()->get('cart', collect([]));
             $cart->forget($request->key);
             $request->session()->put('cart', $cart);
         }
-
+        //dd(session()->get('coupon_discount'));
+        if(session()->get('coupon_discount'))
+            {
+               
+                $id = session()->get('coupon_id');
+                $coupon_detail= json_decode(Coupon::findOrFail($id)->details);
+                if($request->id ==  $coupon_detail[0]->product_id){
+                
+                //  dd('break');
+                    FacadesSession::forget('coupon_discount');
+                }
+            }
         return view('frontend.partials.cart_details');
     }
 
     //updated the quantity for a cart item
     public function updateQuantity(Request $request)
     {
-        $cart = $request->session()->get('cart', collect([]));
-        $cart = $cart->map(function ($object, $key) use ($request) {
+        
+        $cart =collect( $request->session()->get('cart', collect([])));
+
+        $carts = $cart->map(function ($object, $key) use ($request) {
             if($key == $request->key){
                 $object['quantity'] = $request->quantity;
             }
             return $object;
         });
-        $request->session()->put('cart', $cart);
+     
+        $request->session()->put('cart', $carts);
 
         return view('frontend.partials.cart_details');
     }

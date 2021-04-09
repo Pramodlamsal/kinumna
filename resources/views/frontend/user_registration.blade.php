@@ -30,23 +30,41 @@
                                             </div>
                                         </div>
 
-                                        <div class="form-group">
+                                        {{-- <div class="form-group">
                                             <div class="input-group input-group--style-1">
                                                 <input type="number" class="form-control{{ $errors->has('phone') ? ' is-invalid' : '' }}" value="{{ old('phone') }}" placeholder="{{ __('Phone Number') }}" name="phone">
                                                 <span class="input-group-addon">
                                                     <i class="text-md la la-phone"></i>
                                                 </span>
                                             </div>
-                                        </div>
-
+                                        </div> --}}
                                         <div class="form-group">
                                             <div class="input-group input-group--style-1">
-                                                <input type="number" class="form-control{{ $errors->has('mobile') ? ' is-invalid' : '' }}" value="{{ old('mobile') }}" placeholder="{{ __('Mobile Number') }}" name="mobile">
+                                                <input type="number" class="col-sm-8 form-control form-control-sm{{ $errors->has('mobile') ? ' is-invalid' : '' }}" value="{{ old('mobile') }}" placeholder="{{ __('Mobile Number') }}" id="mobile" name="mobile">
                                                 <span class="input-group-addon">
                                                     <i class="text-md la la-mobile"></i>
                                                 </span>
+                                                <input type="button" value="Verify" class="text-white col-sm-4 btn btn-primary btn-sm" name="submitButton" onclick="OnActionClick()" />
+
+                                                @if ($errors->has('mobile'))
+                                                <span class="invalid-feedback" role="alert">
+
+                                                    <strong>{{ $errors->first('mobile') }}</strong>
+                                                </span>
+                                                @endif
+
                                             </div>
                                         </div>
+
+                                        <div class="form-group">
+                                            <div id="fields" style="display:none">
+                                                <div class="input-group input-group--style-1">
+                                                    <input type="text" class="form-control form-control-sm" name="verification_code" placeholder="Verification Code"/>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
 
                                         <div class="form-group">
                                             <div class="input-group input-group--style-1">
@@ -143,7 +161,7 @@
 
                                         <div class="checkbox pad-btm text-left">
                                             <input class="magic-checkbox" type="checkbox" name="checkbox_example_1" id="checkboxExample_1a" required>
-                                            <label for="checkboxExample_1a" class="text-sm">{{__('By signing up you agree to our terms and conditions.')}}</label>
+                                            <label for="checkboxExample_1a" class="text-sm"><b>{{__('By signing up you agree to our terms and conditions.')}}</b></label>
                                         </div>
 
                                         <div class="text-right mt-3">
@@ -234,5 +252,27 @@
                 $(el).html('Use Email Instead');
             }
         }
+        function OnActionClick() {
+
+    // alert("Error when update data");
+    var b=$('#mobile').val();
+    // $('id').val(b)
+    $.ajax({
+
+            type: "GET",
+            url: "/send/message",
+            data: {
+                contact_number: b
+            },
+
+            success: function () {
+            //    alert("ok");
+            },
+            error: function () {
+                //alert("Error when update data");
+            }
+        });
+        $('#fields, #contact-btn').toggle();
+}
     </script>
 @endsection

@@ -69,6 +69,7 @@
                     <th>{{__('Base Price')}}</th>
                     <th>{{__('Todays Deal')}}</th>
                     <th>{{__('Rating')}}</th>
+                    <th>{{__('Verified')}}</th>
                     <th>{{__('Published')}}</th>
                     <th>{{__('Featured')}}</th>
                     <th>{{__('Options')}}</th>
@@ -87,7 +88,7 @@
                             </a>
                         </td>
                         @if($type == 'Seller')
-                            <td>{{ $product->user->name }}</td>
+                            <td> </td>
                         @endif
                         <td>{{ $product->num_of_sale }} {{__('times')}}</td>
                         <td>
@@ -109,6 +110,9 @@
                                 <input onchange="update_todays_deal(this)" value="{{ $product->id }}" type="checkbox" <?php if($product->todays_deal == 1) echo "checked";?> >
                                 <span class="slider round"></span></label></td>
                         <td>{{ $product->rating }}</td>
+                        <td><label class="switch">
+                            <input onchange="update_verified(this)" value="{{ $product->id }}" type="checkbox" <?php if($product->verified == 1) echo "checked";?> >
+                            <span class="slider round"></span></label></td>
                         <td><label class="switch">
                                 <input onchange="update_published(this)" value="{{ $product->id }}" type="checkbox" <?php if($product->published == 1) echo "checked";?> >
                                 <span class="slider round"></span></label></td>
@@ -163,6 +167,23 @@
             $.post('{{ route('products.todays_deal') }}', {_token:'{{ csrf_token() }}', id:el.value, status:status}, function(data){
                 if(data == 1){
                     showAlert('success', 'Todays Deal updated successfully');
+                }
+                else{
+                    showAlert('danger', 'Something went wrong');
+                }
+            });
+        }
+
+        function update_verified(el){
+            if(el.checked){
+                var status = 1;
+            }
+            else{
+                var status = 0;
+            }
+            $.post('{{ route('products.verified') }}', {_token:'{{ csrf_token() }}', id:el.value, status:status}, function(data){
+                if(data == 1){
+                    showAlert('success', 'Verified products updated successfully');
                 }
                 else{
                     showAlert('danger', 'Something went wrong');

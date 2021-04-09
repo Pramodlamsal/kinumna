@@ -96,7 +96,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td class="w-50 strong-600">{{__('Shipping address')}}:</td>
-                                                    <td>{{ json_decode($order->shipping_address)->address }}, {{ json_decode($order->shipping_address)->city }}, {{ json_decode($order->shipping_address)->country }}</td>
+                                                    <td>{{ @json_decode($order->shipping_address)->landmark }}, {{ json_decode($order->shipping_address)->address }}, {{ json_decode($order->shipping_address)->city }}, {{ json_decode($order->shipping_address)->country }}</td>
                                                 </tr>
                                             </table>
                                         </div>
@@ -174,6 +174,10 @@
                                             </tbody>
                                         </table>
                                     </div>
+                                    @php
+// dd($order->orderDetails);
+                                    @endphp
+
                                     <div class="row">
                                         <div class="col-xl-5 col-md-6 ml-auto">
                                             <table class="table details-table">
@@ -187,7 +191,7 @@
                                                     <tr>
                                                         <th>{{__('Shipping')}}</th>
                                                         <td class="text-right">
-                                                            <span class="text-italic">{{ single_price($order->orderDetails->sum('shipping_cost')) }}</span>
+                                                            <span class="text-italic">{{ single_price($order->orderDetails[0]->shipping_cost) }}</span>
                                                         </td>
                                                     </tr>
                                                     <tr>

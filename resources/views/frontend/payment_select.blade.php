@@ -1,7 +1,6 @@
 @extends('frontend.layouts.app')
 
 @section('content')
-
     <div id="page-content">
         <section class="slice-xs sct-color-2 border-bottom">
             <div class="container container-sm">
@@ -68,13 +67,14 @@
                 <div class="row cols-xs-space cols-sm-space cols-md-space">
                     <div class="col-lg-8">
                         <form action="{{ route('payment.checkout') }}" class="form-default" data-toggle="validator" role="form" method="POST" id="checkout-form">
-                            @csrf
+                            <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
                             <div class="card">
                                 <div class="card-title px-4 py-3">
                                     <h3 class="heading heading-5 strong-500">
                                         {{__('Select a payment option')}}
                                     </h3>
                                 </div>
+
                                 <div class="card-body text-center">
                                     <div class="row">
                                         <div class="col-md-6 mx-auto">
@@ -171,7 +171,7 @@
                                                     @if($digital != 1)
                                                         <div class="col-6">
                                                             <label class="payment_option mb-4" data-toggle="tooltip" data-title="Cash on Delivery">
-                                                                <input type="radio" id="" name="payment_option" value="cash_on_delivery" checked>
+                                                                <input type="radio" id="cash_payment" name="payment_option" value="cash_on_delivery" checked>
                                                                 <span>
                                                                     <img loading="lazy"  src="{{ asset('frontend/images/icons/cards/cod.png')}}" class="img-fluid">
                                                                 </span>
@@ -193,15 +193,23 @@
                                                         @endforeach
                                                     @endif
                                                 @endif
-                                                
-                                                 <div class="col-6">
+
+                                                         <div class="col-6">
                                                               <label class="payment_option mb-4" data-toggle="tooltip" data-title="IME Pay">
-                                                                  <input type="radio" id="" name="payment_option" value="imePay">
+                                                                  <input type="radio" id="ime_payment" class="ime_payment" name="payment_option" value="imePay">
                                                                   <span>
                                                                       <img loading="lazy"  src="{{ asset('frontend/images/icons/ime.jpg')}}" class="img-fluid" alt="IME Pay">
                                                                   </span>
                                                               </label>
                                                           </div>
+                                                          <div class="col-6">
+                                                            <label class="payment_option mb-4" data-toggle="tooltip" data-title="NIC Pay">
+                                                                <input type="radio" id="nic_payment" class="nic_payment" name="payment_option" value="nicPay">
+                                                                <span>
+                                                                    <img loading="lazy"  src="{{ asset('frontend/images/icons/ime.jpg')}}" class="img-fluid" alt="NIC Pay">
+                                                                </span>
+                                                            </label>
+                                                        </div>
                                             </div>
                                         </div>
                                     </div>
@@ -250,6 +258,8 @@
 @endsection
 
 @section('script')
+<script type="text/javascript">
+    </script>
     <script type="text/javascript">
         function use_wallet(){
             $('input[name=payment_option]').val('wallet');
@@ -259,5 +269,65 @@
             $(el).prop('disabled', true);
             $('#checkout-form').submit();
         }
+
+
+        $(document).ready(function () {
+            $(document).on('change', '.ime_payment', function (e) {
+                console.log($('.ime_payment').val());
+                e.preventDefault();
+                        $.ajax({
+                            method: "post",
+                            url: "/checkout/payment_select",
+                            dataType: "json",
+                            data: {
+                                "_token": @json(csrf_token()),
+                                'payment' : $('.ime_payment').val(),
+                                },
+                        });
+                });
+
+                $("#ime_payment").click(function(event) {
+                    // session(['shipping_discount'=>1];
+                $('#shipping_discount').removeAttr("hidden");
+
+                    // return;
+                });
+                $("#cash_payment").click(function(event) {
+                    // console.log("hello");
+                $('#shipping_discount').attr("hidden",true);
+                });
+
+            });
+
+
+            $(document).ready(function () {
+            $(document).on('change', '.nic_payment', function (e) {
+                console.log($('.ime_payment').val());
+                e.preventDefault();
+                        $.ajax({
+                            method: "post",
+                            url: "/checkout/payment_select",
+                            dataType: "json",
+                            data: {
+                                "_token": @json(csrf_token()),
+                                'payment' : $('.nic_payment').val(),
+                                },
+                        });
+                });
+
+                $("#nic_payment").click(function(event) {
+                    // session(['shipping_discount'=>1];
+                $('#shipping_discount').removeAttr("hidden");
+
+                    // return;
+                });
+                $("#cash_payment").click(function(event) {
+                    // console.log("hello");
+                $('#shipping_discount').attr("hidden",true);
+                });
+
+            });
+
+
     </script>
 @endsection

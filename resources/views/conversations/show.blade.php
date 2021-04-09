@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-
+fghj
 <div class="col-lg-12">
     <div class="panel">
         <div class="panel-heading">
@@ -29,7 +29,7 @@
                     </div>
                 </div>
             @endforeach
-            @if (Auth::user()->id == $conversation->receiver_id)
+
                 <form action="{{ route('messages.store') }}" method="POST">
                     @csrf
                     <input type="hidden" name="conversation_id" value="{{ $conversation->id }}">
@@ -43,7 +43,7 @@
                         <button type="submit" class="btn btn-info">{{__('Send')}}</button>
                     </div>
                 </form>
-            @endif
+             
         </div>
     </div>
 </div>

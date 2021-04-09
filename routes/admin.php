@@ -208,14 +208,14 @@ Route::group(['prefix' =>'admin', 'middleware' => ['auth', 'admin']], function()
 
 	Route::resource('countries','CountryController');
 	Route::post('/countries/status', 'CountryController@updateStatus')->name('countries.status');
-// district
+	// district
 
-Route::resource('districts','DistrictController');
+		Route::resource('districts','DistrictController');
 		Route::get('/districts/create/', 'DistrictController@create')->name('districts.create');
 		Route::get('/districts/{id}/edit', 'DistrictController@edit')->name('districts.edit');
 		Route::post('/districts/update_status', 'DistrictController@update_status')->name('districts.update_status');
 	    Route::get('/districts/destroy/{id}', 'DistrictController@destroy')->name('districts.destroy');
+	//district
+	Route::get('/excel_export', 'CustomerController@excel')->name('export_excel.excel');
 
-
-//district
 });

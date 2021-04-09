@@ -1,4 +1,14 @@
 @extends('frontend.layouts.app')
+@section('styles')
+<style>
+    label {
+    font-weight: 800;
+    font-size: 0.8rem
+    text-transform: none;
+    color: rgba(0, 0, 0, 0.7);
+};
+</style>
+@endsection
 
 @section('content')
 
@@ -99,12 +109,12 @@
                                                                 <span class="strong-600 ml-2"> {{ $district }}</span>
                                                             </div>
                                                             <div>
-                                                                <span class="alpha-6">City:</span>
-                                                                <span class="strong-600 ml-2">{{ $address->city }}</span>
+                                                                <span class="alpha-6">Landmark:</span>
+                                                                <span class="strong-600 ml-2">{{ $address->landmark }}</span>
                                                             </div>
                                                             <div>
-                                                                <span class="alpha-6">Country:</span>
-                                                                <span class="strong-600 ml-2">{{ $address->country }}</span>
+                                                                <span class="alpha-6">City:</span>
+                                                                <span class="strong-600 ml-2">{{ $address->city }}</span>
                                                             </div>
                                                             <div>
                                                                 <span class="alpha-6">Phone:</span>
@@ -147,14 +157,14 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <label class="control-label">{{__('Address')}}</label>
+                                                    <strong><label class="control-label">{{__('Address')}}</label></strong>
                                                     <input type="text" class="form-control" name="address" placeholder="{{__('Address')}}" required>
                                                 </div>
                                             </div>
                                         </div>
 
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            {{-- <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label class="control-label">{{__('Select your country')}}</label>
                                                     <select class="form-control custome-control" data-live-search="true" name="country">
@@ -163,7 +173,7 @@
                                                         @endforeach
                                                     </select>
                                                 </div>
-                                            </div>
+                                            </div> --}}
                                             <div class="col-md-6">
                                                 <div class="form-group has-feedback">
                                                     <label class="control-label">{{__('City')}}</label>
@@ -174,14 +184,29 @@
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group has-feedback">
-                                                    <label class="control-label">{{__('Postal code')}}</label>
-                                                    <input type="number" min="0" class="form-control" placeholder="{{__('Postal code')}}" name="postal_code" required>
+                                                    <label class="control-label">{{__('District')}}</label>
+                                                    <select name="district" id="district" class="form-control" required>
+                                                        <option value="">Choose District </option>
+                                                        @foreach (\App\District::all()->sortBy('name') as $district)
+                                                        <option value="{{ $district->id }}">{{ $district->name }} </option>
+                                                        @endforeach
+                                                    </select>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6">
+                                            {{-- <div class="col-md-6">
                                                 <div class="form-group has-feedback">
                                                     <label class="control-label">{{__('Phone')}}</label>
                                                     <input type="number" min="0" class="form-control" placeholder="{{__('Phone')}}" name="phone" required>
+                                                </div>
+                                            </div> --}}
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label>{{__('Mobile')}}</label>
+                                                </div>
+                                                <div class="col-md-10">
+                                                    <input type="number" class="form-control mb-3" id="mobile" placeholder="{{__('+977')}}" name="phone" value="" min="1000000000" max="9999999999"
+                                                    oninvalid="this.setCustomValidity('Please Enter valid phone number')"
+                                                    oninput="setCustomValidity('')"  required >
                                                 </div>
                                             </div>
                                         </div>
@@ -213,6 +238,15 @@
 
     <div class="modal fade" id="new-address-modal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-zoom" role="document">
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                 </ul>
+            </div>
+        @endif
         <div class="modal-content">
             <div class="modal-header">
                 <h6 class="modal-title" id="exampleModalLabel">{{__('New Address')}}</h6>
@@ -220,7 +254,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form class="form-default" role="form" action="{{ route('addresses.store') }}" method="POST">
+            <form class="form-default" role="form" action="{{ route('addresses.store') }}" method="POST" onsubmit="myfunction()">
                 @csrf
                 <div class="modal-body">
                     <div class="p-3">
@@ -234,6 +268,14 @@
                         </div>
                         <div class="row">
                             <div class="col-md-2">
+                                <label>{{__('Landmark')}}</label>
+                            </div>
+                            <div class="col-md-10">
+                                <textarea class="form-control textarea-autogrow mb-3" placeholder="{{__('famous place nearby')}}" rows="1" name="landmark" required></textarea>
+                            </div>
+                        </div>
+                        {{-- <div class="row">
+                            <div class="col-md-2">
                                 <label>{{__('Country')}}</label>
                             </div>
                             <div class="col-md-10">
@@ -245,7 +287,7 @@
                                     </select>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="row">
                             <div class="col-md-2">
                                 <label>{{__('City')}}</label>
@@ -256,29 +298,31 @@
                         </div>
                         <div class="row">
                             <div class="col-md-2">
-                                <label>{{__('Address')}}</label>
+                                <label>{{__('District')}}</label>
                             </div>
                             <div class="col-md-10 mb-2">
-                              <select name="district" id="district" class="form-control">
-                                  <option value="#">Choose District </option>
-                                  @foreach (\App\District::all() as $district)
-                                  <option value="{{ $district->id }}">{{ $district->name }} </option>
+                              <select name="district" id="district" class="form-control" required>
+                                  <option selected disabled value="">Choose District </option>
+                                  @foreach (\App\District::all()->sortBy('name') as $district)
+                                  <option value="{{ $district->id }}" required>{{ $district->name }} </option>
                                   @endforeach
                               </select>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-2">
-                                <label>{{__('Phone')}}</label>
+                                <label>{{__('Mobile')}}</label>
                             </div>
                             <div class="col-md-10">
-                                <input type="text" class="form-control mb-3" placeholder="{{__('+977')}}" name="phone" value="" required>
+                                <input type="number" class="form-control mb-3" id="mobile" placeholder="{{__('+977')}}" name="phone" value="" min="1000000000" max="9999999999"
+                                oninvalid="this.setCustomValidity('Please Enter valid phone number')"
+                                oninput="setCustomValidity('')"  required >
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-base-1">{{ __('Save') }}</button>
+                    <button type="submit" name="submit" value="Submit" class="btn btn-base-1" >{{ __('Save') }}</button>
                 </div>
             </form>
         </div>
@@ -293,6 +337,7 @@
         $('#new-address-modal').modal('show');
     }
 
+@if(\App\BusinessSetting::where('type', 'shipping_type')->first()->value == 'flat_rate')
     $('input[type=radio').click(function(e) {
         let districtId = e.target.dataset.district;
         let renderPrice = function (price) {
@@ -319,6 +364,10 @@
         `;
         return label;
     }
+@endif
 </script>
+
+
+
 @endsection
 

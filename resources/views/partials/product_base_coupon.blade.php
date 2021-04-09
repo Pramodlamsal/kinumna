@@ -61,6 +61,7 @@
         <div class="form-group" id="subcategory">
            <label class="col-lg-3 control-label">{{__('Subcategory')}}</label>
            <div class="col-lg-9">
+
               <select class="form-control subcategory_id" name="subcategory_ids[]" onchange="get_subsubcategories_by_subcategory(this)">
 
               </select>

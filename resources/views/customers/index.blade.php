@@ -25,15 +25,20 @@
             </form>
         </div>
     </div>
-    <div class="panel-body">
+
+       <div class="panel-body">
+           <div>
+               <a href="{{route('export_excel.excel')}}" class="btn-success">Export to Excel</a>
+           </div>
         <table class="table table-striped res-table mar-no" cellspacing="0" width="100%">
             <thead>
                 <tr>
                     <th>#</th>
                     <th>{{__('Name')}}</th>
                     <th>{{__('Email Address')}}</th>
-                    <th>{{__('Phone')}}</th>
+                    {{-- <th>{{__('Phone')}}</th> --}}
                     <th>{{__('Mobile')}}</th>
+                    <th>{{__('Date Of Birth')}}</th>
                     <th>{{__('Created At')}}</th>
                     <th>{{__('Package')}}</th>
                     <th>{{__('Wallet Balance')}}</th>
@@ -47,8 +52,9 @@
                             <td>{{ ($key+1) + ($customers->currentPage() - 1)*$customers->perPage() }}</td>
                             <td>{{$customer->user->name}}</td>
                             <td>{{$customer->user->email}}</td>
-                            <td>{{$customer->user->phone}}</td>
+                            {{-- <td>{{$customer->user->phone}}</td> --}}
                             <td>{{$customer->user->mobile}}</td>
+                            <td>{{$customer->user->dob}}</td>
                             <td>{{$customer->user->created_at}}</td>
                             <td>
                                 @if ($customer->user->customer_package != null)
@@ -87,4 +93,5 @@
             $('#sort_customers').submit();
         }
     </script>
+
 @endsection

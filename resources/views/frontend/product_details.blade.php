@@ -1,3 +1,6 @@
+@php
+//    dd($detailedProduct->subcategory->name);
+@endphp
 @extends('frontend.layouts.app')
 
 @section('meta_title'){{ $detailedProduct->meta_title }}@stop
@@ -33,9 +36,24 @@
 @endsection
 
 @section('content')
+
     <!-- SHOP GRID WRAPPER -->
     <section class="product-details-area gry-bg">
+
         <div class="container">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    @if(isset($detailedProduct->category->id))
+                  <li class="breadcrumb-item"><a href="{{ route('products.category', $detailedProduct->category->slug) }}">{{ $detailedProduct->category->name }}</a></li>
+                  @endif
+                  @if(isset($detailedProduct->subcategory->id))
+                  <li class="breadcrumb-item"><a href="{{ route('products.category', $detailedProduct->subcategory->slug) }}">{{$detailedProduct->subcategory->name}}</a></li>
+                  @endif
+                  @if(isset($detailedProduct->subsubcategory->id))
+                  <li class="breadcrumb-item"><a href="{{ route('products.category', $detailedProduct->subsubcategory->slug) }}">{{$detailedProduct->subsubcategory->name}}</a></li>
+                  @endif
+                </ol>
+              </nav>
 
             <div class="bg-white">
 
@@ -301,11 +319,11 @@
                             <div class="d-table width-100 mt-3">
                                 <div class="d-table-cell">
                                     <!-- Add to wishlist button -->
-                                    <button type="button" class="btn pl-0 btn-link strong-700" onclick="addToWishList({{ $detailedProduct->id }})">
+                                    <button type="button" class="btn bg-primary btn-styled btn-base-3 btn-icon-left strong-700" onclick="addToWishList({{ $detailedProduct->id }})">
                                         {{__('Add to wishlist')}}
                                     </button>
                                     <!-- Add to compare button -->
-                                    <button type="button" class="btn btn-link btn-icon-left strong-700" onclick="addToCompare({{ $detailedProduct->id }})">
+                                    <button type="button" class="btn bg-primary btn-styled btn-base-3 btn-icon-left strong-700" onclick="addToCompare({{ $detailedProduct->id }})">
                                         {{__('Add to compare')}}
                                     </button>
                                     @if(Auth::check() && \App\Addon::where('unique_identifier', 'affiliate_system')->first() != null && \App\Addon::where('unique_identifier', 'affiliate_system')->first()->activated && (\App\AffiliateOption::where('type', 'product_sharing')->first()->status || \App\AffiliateOption::where('type', 'category_wise_affiliate')->first()->status) && Auth::user()->affiliate_user != null && Auth::user()->affiliate_user->status)

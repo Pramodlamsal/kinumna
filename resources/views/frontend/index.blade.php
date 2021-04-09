@@ -141,7 +141,7 @@
                 </div>
              <div class="caorusel-box arrow-round gutters-5">
                     <div class="slick-carousel" data-slick-items="6" data-slick-xl-items="5" data-slick-lg-items="4"  data-slick-md-items="3" data-slick-sm-items="2" data-slick-xs-items="2">
-                @foreach (filter_products(\App\Product::where('published', 1)->where('todays_deal', '1'))->get() as $key => $product)
+                @foreach (filter_products(\App\Product::where('verified', 1)->where('published', 1)->where('todays_deal', '1'))->get() as $key => $product)
                 @if ($product != null)
                         <div class="caorusel-card">
                                 <div class="product-card-2 card card-product shop-cards">
@@ -149,7 +149,7 @@
                                         <a href="{{ route('product', $product->slug) }}" class="d-block flash-deal-item">
                                                 <div class="card-image">
 
-                                            <img class="img-fit lazyload mx-auto" src="{{ asset('frontend/images/placeholder.jpg') }}" data-src="{{ asset($product->flash_deal_img) }}" alt="{{ __($product->name) }}">
+                                            <img class="img-fit lazyload mx-auto" src="{{ asset('frontend/images/placeholder.jpg') }}" data-src="{{ asset($product->flash_deal_img) }}" alt="{{ __($product->name) }}" style="height: auto">
                                                 </div>
                                             <div class="p-md-3 p-2">
                                                 <div class="price-box">
@@ -226,21 +226,20 @@
 
     @php
         $flash_deal = \App\FlashDeal::where('status', 1)->where('featured', 1)->first();
+    // dd($flash_deal);
     @endphp
     @if($flash_deal != null && strtotime(date('d-m-Y')) >= $flash_deal->start_date && strtotime(date('d-m-Y')) <= $flash_deal->end_date)
     <section class="mb-4">
         <div class="container">
             <div class="px-2 py-4 p-md-4 bg-white shadow-sm">
                 <div class="section-title-1 clearfix ">
-                    <h3 class="heading-5 strong-700 mb-0 float-left">
-                        {{__('Flash Sale')}}
-                    </h3>
-                    <div class="flash-deal-box float-left">
-                        <div class="countdown countdown--style-1 countdown--style-1-v1 " data-countdown-date="{{ date('m/d/Y', $flash_deal->end_date) }}" data-countdown-label="show"></div>
-                    </div>
+                    <h2 class="heading-5 strong-700 mb-0 float-left">
+                        {{__('हारालुछ SALE')}}
+                    </h2>
                     <ul class="inline-links float-right">
                         <li><a href="{{ route('flash-deal-details', $flash_deal->slug) }}" class="active">View More</a></li>
                     </ul>
+                 <div class="countdown countdown-sm countdown--style-3" style="text-align: center; color:#2985c4;" data-countdown-date="{{ date('m/d/Y', $flash_deal->end_date) }}" data-countdown-label="show"></div>
                 </div>
                 <div class="caorusel-box arrow-round gutters-5">
                     <div class="slick-carousel" data-slick-items="6" data-slick-xl-items="5" data-slick-lg-items="4"  data-slick-md-items="3" data-slick-sm-items="2" data-slick-xs-items="2">
@@ -305,7 +304,6 @@
     <div id="section_home_categories">
 
     </div>
-
     @if(\App\BusinessSetting::where('type', 'classified_product')->first()->value == 1)
         @php
             $customer_products = \App\CustomerProduct::where('status', '1')->where('published', '1')->take(10)->get();

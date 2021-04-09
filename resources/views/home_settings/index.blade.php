@@ -67,6 +67,7 @@
                                                     {{__('Actions')}} <i class="dropdown-caret"></i>
                                                 </button>
                                                 <ul class="dropdown-menu dropdown-menu-right">
+                                                    <li><a onclick="edit_slider({{ $slider->id }})">{{__('Edit')}}</a></li>
                                                     <li><a onclick="confirm_modal('{{route('sliders.destroy', $slider->id)}}');">{{__('Delete')}}</a></li>
                                                 </ul>
                                             </div>
@@ -320,6 +321,16 @@
     function add_banner_2(){
         $.get('{{ route('home_banners.create', 2)}}', {}, function(data){
             $('#demo-lft-tab-3').html(data);
+        });
+    }
+
+    function edit_slider(id){
+        // dd('test');
+        var url = '{{ route("sliders.edit", "slider_id") }}';
+        url = url.replace('slider_id', id);
+        $.get(url, {}, function(data){
+            $('#demo-lft-tab-2').html(data);
+            $('.demo-select2-placeholder').select2();
         });
     }
 

@@ -8,6 +8,7 @@ use App\FlashDealProduct;
 use App\FlashDeal;
 use App\OtpConfiguration;
 use Twilio\Rest\Client;
+use Nexmo\Laravel\Facade\Nexmo;
 
 
 //highlights the selected navigation on admin panel

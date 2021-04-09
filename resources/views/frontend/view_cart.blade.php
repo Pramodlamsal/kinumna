@@ -78,12 +78,7 @@
                                         <tr>
                                             <th class="product-image"></th>
                                             <th class="product-name">{{__('Product')}}</th>
-                                            <div class="col-md-6">
-                                                <div class="form-group has-feedback">
-                                                    <label class="control-label">{{__('Postal code')}}</label>
-                                                    <input type="number" min="0" class="form-control" placeholder="{{__('Postal code')}}" name="postal_code" required>
-                                                </div>
-                                            </div>                <th class="product-price d-none d-lg-table-cell">{{__('Price')}}</th>
+                                                           <th class="product-price d-none d-lg-table-cell">{{__('Price')}}</th>
                                             <th class="product-quanity d-none d-md-table-cell">{{__('Quantity')}}</th>
                                             <th class="product-total">{{__('Total')}}</th>
                                             <th class="product-remove"></th>
@@ -96,6 +91,7 @@
                                         @foreach (Session::get('cart') as $key => $cartItem)
                                             @php
                                             $product = \App\Product::find($cartItem['id']);
+
                                             $total = $total + $cartItem['price']*$cartItem['quantity'];
                                             $product_name_with_choice = $product->name;
                                             if ($cartItem['variant'] != null) {
@@ -144,8 +140,9 @@
                                                 <td class="product-total">
                                                     <span>{{ single_price(($cartItem['price']+$cartItem['tax'])*$cartItem['quantity']) }}</span>
                                                 </td>
+
                                                 <td class="product-remove">
-                                                    <a href="#" onclick="removeFromCartView(event, {{ $key }})" class="text-right pl-4">
+                                                    <a href="#" onclick="removeFromCartView(event, {{ $key }},{{$cartItem['id']}})" class="text-right pl-4">
                                                         <i class="la la-trash"></i>
                                                     </a>
                                                 </td>
@@ -274,9 +271,10 @@
 
 @section('script')
     <script type="text/javascript">
-    function removeFromCartView(e, key){
+    function removeFromCartView(e, key,id){
         e.preventDefault();
-        removeFromCart(key);
+
+        removeFromCart(key,id);
     }
 
     function updateQuantity(key, element){

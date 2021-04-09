@@ -36,9 +36,10 @@ class CheckoutController extends Controller
     //check the selected payment gateway and redirect to that controller accordingly
     public function checkout(Request $request)
     {
-        // dd('hk');
+       
+        // dd($request->payment_option);
         if ($request->payment_option != null) {
-
+                //  dd('hk');
             $orderController = new OrderController;
             $orderController->store($request);
 
@@ -77,6 +78,10 @@ class CheckoutController extends Controller
                     $paytm = new PaytmController;
                     return $paytm->index();
                 }
+                elseif ($request->payment_option == 'nicPay') {
+                    $nicPay = new NicpayController;
+                    return $nicPay->index();
+                }
                 elseif ($request->payment_option == 'cash_on_delivery') {
                     $request->session()->put('cart', collect([]));
                     // $request->session()->forget('order_id');
@@ -97,6 +102,7 @@ class CheckoutController extends Controller
                   $order =  Order::findOrFail($request->session()->get('order_id'));
                   $amount = $order->grand_total;
                   $refId = $order->code;
+                
                     return $imePay->index($amount,$refId);
                 }
                 else{
@@ -177,6 +183,7 @@ class CheckoutController extends Controller
         }
 
         $order->commission_calculated = 1;
+        // dd($order);
         $order->save();
 
         Session::put('cart', collect([]));
@@ -192,6 +199,7 @@ class CheckoutController extends Controller
 
     public function get_shipping_info(Request $request)
     {
+    //   dd(Session::get('coupon_discount'));
         if(Session::has('cart') && count(Session::get('cart')) > 0){
             $categories = Category::all();
             return view('frontend.shipping_info', compact('categories'));
@@ -201,22 +209,25 @@ class CheckoutController extends Controller
     }
 
     public function store_shipping_info(Request $request)
-    {
-
+    { 
+        // dd('test');
         if (Auth::check()) {
             if($request->address_id == null){
                 flash("Please add shipping address")->warning();
                 return back();
-            }
+            } 
             $address = Address::findOrFail($request->address_id);
             $data['name'] = Auth::user()->name;
             $data['email'] = Auth::user()->email;
             $data['address'] = $address->address;
+            $data['landmark'] = $address->landmark;
             $data['country'] = $address->country;
             $data['city'] = $address->city;
-            $data['postal_code'] = $address->postal_code;
+            // $data['postal_code'] = $address->postal_code;
             $data['phone'] = $address->phone;
-            $data['checkout_type'] = $request->checkout_type;
+            $data['checkout_type'] = $request->checkout_type; 
+            // dd('test user');
+            $district = $address->district_id;
         }
         else {
             $data['name'] = $request->name;
@@ -224,46 +235,68 @@ class CheckoutController extends Controller
             $data['address'] = $request->address;
             $data['country'] = $request->country;
             $data['city'] = $request->city;
-            $data['postal_code'] = $request->postal_code;
+            // $data['district'] = $request->district;
+            // $data['postal_code'] = $request->postal_code;
+            $data['landmark'] = $request->landmark;
             $data['phone'] = $request->phone;
             $data['checkout_type'] = $request->checkout_type;
+            // dd('test guest');
+            // dd($data);
+            $district=$request->district;
         }
-
+        
         $shipping_info = $data;
         $request->session()->put('shipping_info', $shipping_info);
 
         $subtotal = 0;
         $tax = 0;
         $shipping = 0;
-        $district = $address->district_id;
+        // dd($address);
+        // $district = $address->district_id;
         
-
+        // dd( $cartItem['price']);
         foreach (Session::get('cart') as $key => $cartItem){
             $subtotal += $cartItem['price']*$cartItem['quantity'];
             $tax += $cartItem['tax']*$cartItem['quantity'];
-            $shipping += District::find($district)->shipping_charge;
+            //$shipping += District::find($district)->shipping_charge;
+            $shipping_per_district = District::find($district)->shipping_charge;
+            // $shipping =0;
         }
+        if (\App\BusinessSetting::where('type', 'shipping_type')->first()->value == 'flat_rate') {
 
-
+            $shipping = $shipping_per_district;
+        }else{
+            $shipping =0;
+        }
+        
+// dd($shipping);
         $total = $subtotal + $tax + $shipping;
-
+        // dd($total);
+        $carts = array();
         foreach(Session::get('cart') as $key => $item) {
             $item['shipping'] = $shipping;
-            session()->put('cart',[$key => $item]);
+            array_push($carts,$item);
         }
-
+        session()->put('cart',$carts);
+       
         if(Session::has('coupon_discount')){
                 $total -= Session::get('coupon_discount');
         }
-        
+        // dd($total);
+       
         return view('frontend.delivery_info');
         // return view('frontend.payment_select', compact('total'));
     }
 
     public function store_delivery_info(Request $request)
     {
+    //  if($request->ajax()){
+    //      dd($request->all());
+    //  }   
+    //    dd(Session::has('cart'));
         if(Session::has('cart') && count(Session::get('cart')) > 0){
             $cart = collect($request->session()->get('cart'));
+            //mm
             // $cart = $cart->map(function ($object, $key) use ($request) {
             //     if(\App\Product::find($object['id'])->added_by == 'admin'){
             //         if($request['shipping_type_admin'] == 'home_delivery'){
@@ -291,16 +324,17 @@ class CheckoutController extends Controller
             // });
 
             // $request->session()->put('cart', $cart);
-
+//mm
             $subtotal = 0;
             $tax = 0;
-            $shipping = 0;
+            // $shipping = 0;
+            // dd(Session::get('cart'));
             foreach (Session::get('cart') as $key => $cartItem){
                 $subtotal += $cartItem['price']*$cartItem['quantity'];
-                $tax += $cartItem['tax']*$cartItem['quantity'];
-                $shipping += $cartItem['shipping']*$cartItem['quantity'];
+                $tax += $cartItem['tax']*$cartItem['quantity'];    
+                    $shipping = $cartItem['shipping'];
             }
-
+// dd($shipping);
             $total = $subtotal + $tax + $shipping;
 
             if(Session::has('coupon_discount')){
@@ -325,9 +359,9 @@ class CheckoutController extends Controller
         foreach (Session::get('cart') as $key => $cartItem){
             $subtotal += $cartItem['price']*$cartItem['quantity'];
             $tax += $cartItem['tax']*$cartItem['quantity'];
-            $shipping += $cartItem['shipping']*$cartItem['quantity'];
+            $shipping = $cartItem['shipping']*$cartItem['quantity'];
         }
-
+// dd($shipping);
         $total = $subtotal + $tax + $shipping;
 
         if(Session::has('coupon_discount')){
@@ -355,8 +389,9 @@ class CheckoutController extends Controller
                         {
                             $subtotal += $cartItem['price']*$cartItem['quantity'];
                             $tax += $cartItem['tax']*$cartItem['quantity'];
-                            $shipping += $cartItem['shipping']*$cartItem['quantity'];
+                            $shipping = $cartItem['shipping']*$cartItem['quantity'];
                         }
+                        // dd($shipping);
                         $sum = $subtotal+$tax+$shipping;
 
                         if ($sum > $coupon_details->min_buy) {
@@ -408,7 +443,7 @@ class CheckoutController extends Controller
             }
         }
         else {
-            flash('Invalid coupon!')->warning();
+            flash("Coupon has not been applied, please check T&C's")->warning();
         }
         return back();
     }
@@ -421,12 +456,13 @@ class CheckoutController extends Controller
 
     public function order_confirmed(){
         $order = Order::findOrFail(Session::get('order_id'));
+        // dd($order);
+        // dd($order->orderDetails->sum('shipping_cost'));
         return view('frontend.order_confirmed', compact('order'));
     }
-
-    public function getShippingPriceBasedOnDistrict(District $district )
+    public function getShippingPriceBasedOnDistrict(District $district)
     {
-        return response()->json(['price' => $district->shipping_charge]);
+            return response()->json(['price' => $district->shipping_charge]);
     }
 
     

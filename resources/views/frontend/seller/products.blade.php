@@ -1,7 +1,7 @@
 @extends('frontend.layouts.app')
 
 @section('content')
-
+{{-- fdfd --}}
     <section class="gry-bg py-4 profile">
         <div class="container">
             <div class="row cols-xs-space cols-sm-space cols-md-space">
@@ -149,7 +149,7 @@
 
                         <div class="pagination-wrapper py-4">
                             <ul class="pagination justify-content-end">
-                                {{ $products->links() }}
+                                {{ $products->appends($_GET)->links() }}
                             </ul>
                         </div>
 

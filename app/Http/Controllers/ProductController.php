@@ -78,7 +78,7 @@ class ProductController extends Controller
             $products = $products->orderBy($col_name, $query);
             $sort_type = $request->type;
         }
-
+// dd($product);
         $products = $products->orderBy('created_at', 'desc')->paginate(15);
         $type = 'Seller';
 
@@ -112,6 +112,7 @@ class ProductController extends Controller
         if(Auth::user()->user_type == 'seller'){
             $product->user_id = Auth::user()->id;
             $product->published = '0';
+            $product->verified = '0';
         }
         else{
             $product->user_id = \App\User::where('user_type', 'admin')->first()->id;
@@ -434,6 +435,7 @@ class ProductController extends Controller
             //ImageOptimizer::optimize(base_path('public/').$product->meta_img);
         }
 
+        $product->pdf = $request->previous_pdf;
         if($request->hasFile('pdf')){
             $product->pdf = $request->pdf->store('uploads/products/pdf');
         }
@@ -532,7 +534,6 @@ class ProductController extends Controller
                 $product_stock->save();
             }
         }
-
         $product->save();
 
         flash(__('Product has been updated successfully'))->success();
@@ -552,6 +553,7 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
+        // dd('test');
         $product = Product::findOrFail($id);
         if(Product::destroy($id)){
             foreach (Language::all() as $key => $language) {
@@ -620,6 +622,22 @@ class ProductController extends Controller
             return 1;
         }
         return 0;
+    }
+
+    public function updateVerified(Request $request)
+    {
+        $product = Product::findOrFail($request->id);
+        $product->verified = $request->status;
+
+        if($product->added_by == 'seller' && \App\Addon::where('unique_identifier', 'seller_subscription')->first() != null && \App\Addon::where('unique_identifier', 'seller_subscription')->first()->activated){
+            $seller = $product->user->seller;
+            if($seller->invalid_at != null && Carbon::now()->diffInDays(Carbon::parse($seller->invalid_at), false) <= 0){
+                return 0;
+            }
+        }
+
+        $product->save();
+        return 1;
     }
 
     public function updatePublished(Request $request)

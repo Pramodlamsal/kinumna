@@ -7,7 +7,7 @@
 <div class="text-center">
          <div class="payment-method__container box-shadow">
             <div class="content">
-                <form action="https://stg.imepay.com.np:7979/WebCheckout/Checkout " method="post">
+                <form action="https://payment.imepay.com.np:7979/WebCheckout/Checkout" method="post">
                     <input type="hidden" name="TokenId" value="{{$token_response->TokenId}}">
                     <input type="hidden" name="MerchantCode" value="{{$merch_code}}">
                     <input type="hidden" name="TranAmount" value="{{$token_response->Amount}}">
@@ -19,7 +19,7 @@
                 </form>
             </div>
         </div>
-        </div>    
         </div>
-   
+        </div>
+
 @endsection

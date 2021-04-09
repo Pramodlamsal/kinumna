@@ -1,4 +1,13 @@
 @extends('frontend.layouts.app')
+@section('styles')
+<style>
+    .sidebar-box .box-content.scroll_enabled{
+        padding: 15px;
+        max-height: 250px;
+        overflow-y: scroll;
+    }
+</style>
+@endsection
 
 @if(isset($subsubcategory_id))
     @php
@@ -184,7 +193,7 @@
                                     <div class="box-title text-center">
                                         Filter by {{ \App\Attribute::find($attribute['id'])->name }}
                                     </div>
-                                    <div class="box-content">
+                                    <div class="box-content scroll_enabled">
                                         <!-- Filter by others -->
                                         <div class="filter-checkbox">
                                             @if(array_key_exists('values', $attribute))
@@ -299,6 +308,9 @@
                         <!-- <hr class=""> -->
                         <div class="products-box-bar p-3 bg-white">
                             <div class="row sm-no-gutters gutters-5">
+                                @php
+                                    // dd($products);
+                                @endphp
                                 @foreach ($products as $key => $product)
                                     <div class="col-xxl-3 col-xl-4 col-lg-3 col-md-4 col-6">
                                         <div class="product-box-2 bg-white alt-box my-md-2">

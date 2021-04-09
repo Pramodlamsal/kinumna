@@ -16,6 +16,7 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Cookie;
 use Nexmo;
 use Twilio\Rest\Client;
+use Session;
 
 class RegisterController extends Controller
 {
@@ -60,8 +61,9 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'name' => 'required|string|max:255',
             'password' => 'required|string|min:6|confirmed',
-            'mobile' => 'required_without:phone|nullable|string|max:10|min:10',
-            'phone' => 'required_without:mobile|nullable|string|max:10|min:9',
+            'mobile' => 'required|string|max:10|min:10|unique:users,mobile',
+            'verification_code' => 'required|string|max:255',
+            // 'dob' => 'required|date',
             
         ]);
     }
@@ -76,23 +78,30 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\User
      */
-    protected function create(array $data)
-    {
+    protected function create(Request $request)
+    { 
+        $data = $request->all();
         if (filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
             $user = User::create([
                 'name' => $data['name'],
-                'phone' => $data['phone'],
+                // 'phone' => $data['phone'],
                 'mobile' => $data['mobile'],
                 'dob' => $data['dob'],
                 'email' => $data['email'],
+                // 'verification_code' => $data['verification_code'],
                 'password' => Hash::make($data['password']),
             ]);
-            // dd($user);
+            
 
             $customer = new Customer;
             $customer->user_id = $user->id;
+            // dd('test');
+            // dd($user);
+            // dd($request->get('verification_code'));
+            // dd()
+            if($request->get('verification_code')==Session::get('OTP')){
             $customer->save();
-
+            }
             if(BusinessSetting::where('type', 'email_verification')->first()->value != 1){
                 $user->email_verified_at = date('Y-m-d H:m:s');
                 $user->save();
@@ -139,7 +148,7 @@ class RegisterController extends Controller
     {
         if (filter_var($request->email, FILTER_VALIDATE_EMAIL)) {
             if(User::where('email', $request->email)->first() != null){
-                flash('EmailPhone already exists.');
+                flash('Email already exists.');
                 return back();
             }
         }
@@ -149,13 +158,25 @@ class RegisterController extends Controller
         }
 
         $this->validator($request->all())->validate();
-
-        event(new Registered($user = $this->create($request->all())));
+        
+    // dd($request->get('verification_code'));
+    if(request()->get('verification_code')== Session::get('OTP')){
+        event(new Registered($user = $this->create($request)));
 
         $this->guard()->login($user);
-
         return $this->registered($request, $user)
             ?: redirect($this->redirectPath());
+ 
+        redirect($this->redirectPath());
+    } else {
+        flash("OTP code doesnt match");
+        return back();
+
+    }
+// dd('ghgh');
+
+        
+        
     }
 
     protected function registered(Request $request, $user)

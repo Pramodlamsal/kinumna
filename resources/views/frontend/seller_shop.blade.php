@@ -150,7 +150,7 @@
                     <div class="col">
                         <div class="caorusel-box arrow-round gutters-15">
                             <div class="slick-carousel center-mode" data-slick-items="5" data-slick-lg-items="3"  data-slick-md-items="3" data-slick-sm-items="1" data-slick-xs-items="1">
-                                @foreach ($shop->user->products->where('published', 1)->where('featured', 1) as $key => $product)
+                                @foreach ($shop->user->products->where('verified', 1)->where('published', 1)->where('featured', 1) as $key => $product)
                                     <div class="caorusel-card my-5">
                                         <div class="product-card-2 card card-product shop-cards shop-tech">
                                             <div class="card-body p-0">
@@ -206,13 +206,13 @@
             <div class="product-list row gutters-5 sm-no-gutters">
                 @php
                     if (!isset($type)){
-                        $products = \App\Product::where('user_id', $shop->user->id)->where('published', 1)->orderBy('created_at', 'desc')->paginate(24);
+                        $products = \App\Product::where('user_id', $shop->user->id)->where('verified', 1)->where('published', 1)->orderBy('created_at', 'desc')->paginate(24);
                     }
                     elseif ($type == 'top_selling'){
-                        $products = \App\Product::where('user_id', $shop->user->id)->where('published', 1)->orderBy('num_of_sale', 'desc')->paginate(24);
+                        $products = \App\Product::where('user_id', $shop->user->id)->where('verified', 1)->where('published', 1)->orderBy('num_of_sale', 'desc')->paginate(24);
                     }
                     elseif ($type == 'all_products'){
-                        $products = \App\Product::where('user_id', $shop->user->id)->where('published', 1)->paginate(24);
+                        $products = \App\Product::where('user_id', $shop->user->id)->where('verified', 1)->where('published', 1)->paginate(24);
                     }
                 @endphp
                 @foreach ($products as $key => $product)

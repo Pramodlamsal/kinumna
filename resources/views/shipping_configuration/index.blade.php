@@ -16,7 +16,6 @@
                         <input id="product-shipping" class="magic-radio" type="radio" name="shipping_type" value="product_wise_shipping" <?php if(\App\BusinessSetting::where('type', 'shipping_type')->first()->value == 'product_wise_shipping') echo "checked";?>>
                         <label for="product-shipping">
                             <span>{{__('Product Wise Shipping Cost')}}</span>
-                            <span></span>
                         </label>
                     </div>
                     <div class="radio mar-btm">
@@ -26,6 +25,10 @@
                     <div class="radio mar-btm">
                         <input id="seller-shipping" class="magic-radio" type="radio" name="shipping_type" value="seller_wise_shipping" <?php if(\App\BusinessSetting::where('type', 'shipping_type')->first()->value == 'seller_wise_shipping') echo "checked";?>>
                         <label for="seller-shipping">{{__('Seller Wise Flat Shipping Cost')}}</label>
+                    </div>
+                    <div class="radio mar-btm">
+                        <input id="free-shipping" class="magic-radio" type="radio" name="shipping_type" value="free_shipping" <?php if(\App\BusinessSetting::where('type', 'shipping_type')->first()->value == 'free_shipping') echo "checked";?>>
+                        <label for="free-shipping">{{__('Free Shipping')}}</label>
                     </div>
                     <div class="">
                         <button class="btn btn-primary" type="submit">Update</button>

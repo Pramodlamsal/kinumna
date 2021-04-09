@@ -24,10 +24,11 @@
                 <div class="col-lg-3">
                     <label for=update_delivery_status"">{{__('Delivery Status')}}</label>
                     <select class="form-control demo-select2"  data-minimum-results-for-search="Infinity" id="update_delivery_status">
-                        <option value="pending" @if ($delivery_status == 'pending') selected @endif>{{__('Pending')}}</option>
+                        <option value="order received" @if ($delivery_status == 'order received') selected @endif>{{__('order received')}}</option>
                         <option value="on_review" @if ($delivery_status == 'on_review') selected @endif>{{__('On review')}}</option>
                         <option value="on_delivery" @if ($delivery_status == 'on_delivery') selected @endif>{{__('On delivery')}}</option>
                         <option value="delivered" @if ($delivery_status == 'delivered') selected @endif>{{__('Delivered')}}</option>
+                        <option value="cancelled" @if ($delivery_status == 'cancelled') selected @endif>{{__('Cancelled')}}</option>
                     </select>
                 </div>
             </div>

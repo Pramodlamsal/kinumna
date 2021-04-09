@@ -20,6 +20,7 @@
                             $total = 0;
                         @endphp
                         @foreach($cart as $key => $cartItem)
+
                             @php
                                 $product = \App\Product::find($cartItem['id']);
                                 $total = $total + $cartItem['price']*$cartItem['quantity'];
@@ -41,6 +42,7 @@
                                         <span class="dc-quantity">x{{ $cartItem['quantity'] }}</span>
                                         <span class="dc-price">{{ single_price($cartItem['price']*$cartItem['quantity']) }}</span>
                                     </div>
+
                                     <div class="dc-actions">
                                         <button onclick="removeFromCart({{ $key }})">
                                             <i class="la la-close"></i>

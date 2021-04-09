@@ -69,7 +69,16 @@ class SliderController extends Controller
      */
     public function edit($id)
     {
-        //
+        dd('test');
+        $slider = Slider::findOrFail($id);
+        if(Slider::destroy($id)){
+            //unlink($slider->photo);
+            flash(__('Slider has been deleted successfully'))->success();
+        }
+        else{
+            flash(__('Something went wrong'))->error();
+        }
+        return redirect()->route('home_settings.index');
     }
 
     /**
@@ -110,4 +119,6 @@ class SliderController extends Controller
         }
         return redirect()->route('home_settings.index');
     }
+
+    
 }

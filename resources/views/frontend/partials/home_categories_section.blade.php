@@ -13,7 +13,7 @@
                     </div>
                     <div class="caorusel-box arrow-round gutters-5">
                         <div class="slick-carousel" data-slick-items="6" data-slick-xl-items="5" data-slick-lg-items="4"  data-slick-md-items="3" data-slick-sm-items="2" data-slick-xs-items="2">
-                        @foreach (filter_products(\App\Product::where('published', 1)->where('category_id', $homeCategory->category->id))->latest()->limit(12)->get() as $key => $product)
+                        @foreach (filter_products(\App\Product::where('verified', 1)->where('published', 1)->where('category_id', $homeCategory->category->id))->latest()->limit(12)->get() as $key => $product)
                             <div class="caorusel-card">
                                 <div class="product-box-2 bg-white alt-box my-2">
                                     <div class="position-relative overflow-hidden">

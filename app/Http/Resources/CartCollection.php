@@ -59,7 +59,7 @@ $seller_products = [];
                         $subtotal += $data['price']*$data['quantity'];
                         $tax += $data['tax']*$data['quantity'];
                         if (\App\BusinessSetting::where('type', 'shipping_type')->first()->value == 'product_wise_shipping') {
-                            $shipping += $data['shipping'];
+                            $shipping = $data['shipping'];
                         }
                         $product_name_with_choice = $product->name;
                         if ($cartItem['variant'] != null) {

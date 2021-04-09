@@ -30,7 +30,8 @@ class OrderController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
-    {
+    { 
+        // dd('test');
         $payment_status = null;
         $delivery_status = null;
         $sort_search = null;
@@ -52,8 +53,9 @@ class OrderController extends Controller
         if ($request->has('search')){
             $sort_search = $request->search;
             $orders = $orders->where('code', 'like', '%'.$sort_search.'%');
+            // dd($orders);
         }
-
+// dd($orders);
         $orders = $orders->paginate(15);
 
         foreach ($orders as $key => $value) {
@@ -61,7 +63,7 @@ class OrderController extends Controller
             $order->viewed = 1;
             $order->save();
         }
-
+        // dd($orders);
         return view('frontend.seller.orders', compact('orders','payment_status','delivery_status', 'sort_search'));
     }
 
@@ -108,13 +110,16 @@ class OrderController extends Controller
      */
     public function sales(Request $request)
     {
+        // dd('test');
         CoreComponentRepository::instantiateShopRepository();
 
         $sort_search = null;
         $orders = Order::orderBy('code', 'desc');
         if ($request->has('search')){
             $sort_search = $request->search;
-            $orders = $orders->where('code', 'like', '%'.$sort_search.'%');
+            $orders = $orders->where('code', 'like', '%'.$sort_search.'%')->orWhere('shipping_address', 'like', '%'.$sort_search.'%');
+            // dd($orders);
+       
         }
         $orders = $orders->paginate(15);
         return view('sales.index', compact('orders', 'sort_search'));
@@ -168,8 +173,17 @@ class OrderController extends Controller
      */
     public function sales_show($id)
     {
+        // dd('test');
         $order = Order::findOrFail(decrypt($id));
+        // dd($order);
         return view('sales.show', compact('order'));
+    }
+    public function sales_edit($id)
+    {
+        // dd('test');
+        $order = Order::findOrFail(decrypt($id));
+        // dd($order);
+        return view('sales.edit', compact('order'));
     }
 
     /**
@@ -190,6 +204,7 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
+    
         $order = new Order;
         if(Auth::check()){
             $order->user_id = Auth::user()->id;
@@ -197,7 +212,7 @@ class OrderController extends Controller
         else{
             $order->guest_id = mt_rand(100000, 999999);
         }
-
+// dd(json_encode($request->session()->get('shipping_info')));
         $order->shipping_address = json_encode($request->session()->get('shipping_info'));
 
         $order->payment_type = $request->payment_option;
@@ -205,7 +220,7 @@ class OrderController extends Controller
         $order->payment_status_viewed = '0';
         $order->code = date('Ymd-His').rand(10,99);
         $order->date = strtotime('now');
-
+        // dd($order);
         if($order->save()){
             $subtotal = 0;
             $tax = 0;
@@ -232,7 +247,7 @@ class OrderController extends Controller
                 //         $seller_products[$product->user_id] = $product_ids;
                 //     }
                 // }
-                $shipping += $cartItem['shipping'];
+                $shipping = $cartItem['shipping'];
                 // if(!empty($admin_products)){
                 //     $shipping = \App\BusinessSetting::where('type', 'shipping_cost_admin')->first()->value;
                 // }
@@ -242,6 +257,7 @@ class OrderController extends Controller
                 //     }
                 // }
             }
+            // dd($shipping);
             //End Shipping Cost Calculation
 
             //Order Details Storing
@@ -270,9 +286,10 @@ class OrderController extends Controller
                 $order_detail->variation = $product_variation;
                 $order_detail->price = $cartItem['price'] * $cartItem['quantity'];
                 $order_detail->tax = $cartItem['tax'] * $cartItem['quantity'];
-                $order_detail->shipping_type = $cartItem['shipping_type'];
+                // $order_detail->shipping_type = $cartItem['shipping_type'];
                 $order_detail->product_referral_code = $cartItem['product_referral_code'];
                 $order_detail->shipping_cost = $cartItem['shipping'];
+                // dd($order_detail);
 
                 //Dividing Shipping Costs
                 // if ($cartItem['shipping_type'] == 'home_delivery') {
@@ -299,6 +316,7 @@ class OrderController extends Controller
                 // //End of storing shipping cost
 
                 $order_detail->quantity = $cartItem['quantity'];
+                // dd($order_detail);
                 $order_detail->save();
 
                 $product->num_of_sale++;
@@ -316,7 +334,7 @@ class OrderController extends Controller
                 $coupon_usage->coupon_id = Session::get('coupon_id');
                 $coupon_usage->save();
             }
-
+// dd($order);
             $order->save();
 
             //stores the pdf for invoice
@@ -326,8 +344,13 @@ class OrderController extends Controller
                             'tempDir' => storage_path('logs/')
                         ])->loadView('invoices.customer_invoice', compact('order'));
             $output = $pdf->output();
-    		file_put_contents('public/invoices/'.'Order#'.$order->code.'.pdf', $output);
-
+            //File::makeDirectory($path, $mode = 0777, true, true);
+            $path = 'public/invoices/'.'Order#';
+            if(!file_exists($path))
+            {
+                mkdir($path.$order->code.'.pdf', 0777, true);
+            }
+    		file_put_contents($path, $output);
             $array['view'] = 'emails.invoice';
             $array['subject'] = 'Order Placed - '.$order->code;
             $array['from'] = env('MAIL_USERNAME');
@@ -361,7 +384,7 @@ class OrderController extends Controller
 
                 }
             }
-            unlink($array['file']);
+            // unlink($array['file']);
 
             $request->session()->put('order_id', $order->id);
         }
@@ -485,7 +508,7 @@ class OrderController extends Controller
         $order = Order::findOrFail($request->order_id);
         $order->payment_status_viewed = '0';
         $order->save();
-dd($order);
+// dd($order);
         if(Auth::user()->user_type == 'admin' || Auth::user()->user_type == 'seller'){
             foreach($order->orderDetails->where('seller_id', Auth::user()->id) as $key => $orderDetail){
                 $orderDetail->payment_status = $request->status;

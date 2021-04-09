@@ -23,13 +23,19 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label" for="email">{{__('Email Address')}}</label>
                     <div class="col-sm-9">
-                        <input type="text" placeholder="{{__('Email Address')}}" id="email" name="email" class="form-control" value="{{$seller->user->email}}" required>
+                        <input type="text" placeholder="{{__('Email Address')}}" id="email" name="email" class="form-control" value="{{$seller->user->email}}">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-3 control-label" for="phone">{{__('Contact Number')}}</label>
+                    <label class="col-sm-3 control-label" for="phone">{{__('Phone Number')}}</label>
                     <div class="col-sm-9">
-                        <input type="text" placeholder="{{__('Contact Number')}}" id="phone" name="phone" class="form-control" value="{{$seller->user->phone}}" required>
+                        <input type="text" placeholder="{{__('Phone Number')}}" id="phone" name="phone" class="form-control" value="{{$seller->user->phone}}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label" for="mobile">{{__('Mobile Number')}}</label>
+                    <div class="col-sm-9">
+                        <input type="text" placeholder="{{__('Mobile Number')}}" id="mobile" name="mobile" class="form-control" value="{{$seller->user->mobile}}" required>
                     </div>
                 </div>
                 <div class="form-group">

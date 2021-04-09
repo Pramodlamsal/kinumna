@@ -385,7 +385,16 @@
 				<div class="panel-body">
 					<div class="form-group">
 						<label class="col-lg-2 control-label">{{__('PDF Specification')}}</label>
-						<div class="col-lg-7">
+						<div class="col-lg-7 row">
+                            @if ($product->pdf != null)
+                            <div class="col-md-4 col-sm-4 col-xs-6">
+                            <div class="img-upload-preview">
+                                    <p>{{ $product->pdf }} </p>
+                                    <input type="hidden" name="previous_pdf" value="{{ $product->pdf }}">
+                                    <button type="button" class="btn btn-danger close-btn remove-files"><i class="fa fa-times"></i></button>
+                                </div>
+                            </div>
+                        @endif
 							<input type="file" class="form-control" placeholder="{{__('PDF')}}" name="pdf" accept="application/pdf">
 						</div>
 					</div>

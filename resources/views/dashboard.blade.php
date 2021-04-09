@@ -76,7 +76,7 @@
 <div class="sellers_title">{{__('SELLERS')}}</div>
     <div class="row">
     <div class="col-md-4">
-        
+
         <div class="panel">
             <div class="panel-body text-center dash-widget dash-widget-left">
                 <br>

@@ -6,7 +6,10 @@ use Illuminate\Http\Request;
 use App\Customer;
 use App\User;
 use App\Order;
+use App\Exports\UsersExport;
 use Illuminate\Support\Facades\Hash;
+use DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CustomerController extends Controller
 {
@@ -17,8 +20,11 @@ class CustomerController extends Controller
      */
     public function index(Request $request)
     {
+        
         $sort_search = null;
         $customers = Customer::orderBy('created_at', 'desc');
+        // dd($customers);
+        
         if ($request->has('search')){
             $sort_search = $request->search;
             $user_ids = User::where('user_type', 'customer')->where(function($user) use ($sort_search){
@@ -28,9 +34,30 @@ class CustomerController extends Controller
                 $customer->whereIn('user_id', $user_ids);
             });
         }
+        
         $customers = $customers->paginate(15);
+        // dd($customers);
+        
         return view('customers.index', compact('customers', 'sort_search'));
     }
+
+    function excel()
+    {
+   
+     return Excel::download(new UsersExport, 'users.xlsx');
+    //  $customers = Customer::orderBy('created_at', 'desc')->get()->toArray();
+    //  $customer_array[] = array('Name', 'Address', 'City', 'Postal Code', 'Country');
+    //  foreach($customers as $customer)
+    //  {
+      
+    //   $customer_array[] = array(
+    //    'Customer Name'  => $customer['id'],
+    //   );
+    //  }
+  
+    //  Excel::download($customer_array)->download('xlsx');
+    }
+
 
     /**
      * Show the form for creating a new resource.
@@ -82,12 +109,13 @@ class CustomerController extends Controller
 
     public function update(Customer $customer, Request $request)
     {
+        // dd('dfdf');
         $user = $customer->user;
 
         $user->name = $request->name;
         $user->email = $request->email;
         $user->phone = $request->phone;
-        // $user->phone = $request->password;
+        $user->mobile = $request->mobile;
         if(strlen($request->password) > 0){
             $user->password = Hash::make($request->password);
         }

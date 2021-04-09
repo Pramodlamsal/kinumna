@@ -328,13 +328,15 @@ class HomeController extends Controller
     }
 
     public function seller_product_list(Request $request)
-    {
+    { 
+        // dd('vgsd');
         $search = null;
         $products = Product::where('user_id', Auth::user()->id)->orderBy('created_at', 'desc');
         if ($request->has('search')) {
             $search = $request->search;
             $products = $products->where('name', 'like', '%'.$search.'%');
         }
+        // dd($products);
         $products = $products->paginate(10);
         return view('frontend.seller.products', compact('products', 'search'));
     }
@@ -342,7 +344,7 @@ class HomeController extends Controller
     public function ajax_search(Request $request)
     {
         $keywords = array();
-        $products = Product::where('published', 1)->where('tags', 'like', '%'.$request->search.'%')->get();
+        $products = Product::where('verified', 1)->where('published', 1)->where('tags', 'like', '%'.$request->search.'%')->get();
         foreach ($products as $key => $product) {
             foreach (explode(',',$product->tags) as $key => $tag) {
                 if(stripos($tag, $request->search) !== false){
@@ -358,7 +360,7 @@ class HomeController extends Controller
             }
         }
 
-        $products = filter_products(Product::where('published', 1)->where('name', 'like', '%'.$request->search.'%'))->get()->take(3);
+        $products = filter_products(Product::where('verified', 1)->where('published', 1)->where('name', 'like', '%'.$request->search.'%'))->get()->take(3);
 
         $subsubcategories = SubSubCategory::where('name', 'like', '%'.$request->search.'%')->get()->take(3);
 
@@ -372,6 +374,7 @@ class HomeController extends Controller
 
     public function search(Request $request)
     {
+        // dd('kk');
         $query = $request->q;
         $brand_id = (Brand::where('slug', $request->brand)->first() != null) ? Brand::where('slug', $request->brand)->first()->id : null;
         $sort_by = $request->sort_by;
@@ -381,8 +384,9 @@ class HomeController extends Controller
         $min_price = $request->min_price;
         $max_price = $request->max_price;
         $seller_id = $request->seller_id;
+        // dd($seller_id);
 
-        $conditions = ['published' => 1];
+        $conditions = ['published' => 1, 'verified' => 1];
 
         if($brand_id != null){
             $conditions = array_merge($conditions, ['brand_id' => $brand_id]);
@@ -400,7 +404,10 @@ class HomeController extends Controller
             $conditions = array_merge($conditions, ['user_id' => Seller::findOrFail($seller_id)->user->id]);
         }
 
-        $products = Product::where($conditions);
+        $products = filter_products(Product::where($conditions));
+        // $products=filter_products(\App\Product::where($conditions))->get();
+        // $products=count(filter_products(\App\Product::where($conditions))->get());
+        // dd($products);
 
         if($min_price != null && $max_price != null){
             $products = $products->where('unit_price', '>=', $min_price)->where('unit_price', '<=', $max_price);
@@ -431,14 +438,15 @@ class HomeController extends Controller
                     break;
             }
         }
+// dd($products);
 
-
-        $non_paginate_products = filter_products($products)->get();
-
+        $non_paginate_products = filter_products($products);
+        // dd($non_paginate_products);
         //Attribute Filter
 
         $attributes = array();
         foreach ($non_paginate_products as $key => $product) {
+            // dd($product);
             if($product->attributes != null && is_array(json_decode($product->attributes))){
                 foreach (json_decode($product->attributes) as $key => $value) {
                     $flag = false;

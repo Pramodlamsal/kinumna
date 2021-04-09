@@ -17,6 +17,7 @@ class OrderController extends Controller
 {
     public function processOrder(Request $request)
     {
+            // dd('test');
         
         try{
         $shippingAddress = json_decode($request->shipping_address);
@@ -68,7 +69,7 @@ class OrderController extends Controller
                     }
                 }
         }
-
+// dd($shipping);
         foreach ($cartItems as $cartItem) {
             $product = Product::findOrFail($cartItem->product_id);
             if ($cartItem->variation) {
@@ -99,7 +100,7 @@ class OrderController extends Controller
                 $order_detail_shipping_cost = \App\Product::find($cartItem['id'])->shipping_cost;
             }
 
-
+// dd($order_detail_shipping_cost);
             OrderDetail::create([
                 'order_id' => $order->id,
                 'seller_id' => $product->user_id,

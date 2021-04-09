@@ -25,7 +25,9 @@ class ImePayController extends Controller
 
     public static function index($amount, $refId)
     {
+        // dd('testing');
         $token_responses = static::getToken($amount, $refId);
+       
 
         $token_response = json_decode($token_responses);
         ImeTransaction::create([
@@ -42,7 +44,7 @@ class ImePayController extends Controller
 
     private static function getToken($amt, $ref_id)
     {
-
+        
         $data = ["MerchantCode" => self::$merchantcode, "Amount" => $amt, "RefId" => $ref_id];
 
         $header_array = [];
@@ -50,16 +52,16 @@ class ImePayController extends Controller
         $header_array[] = "Module: " . base64_encode(self::$module);
         $header_array[] = "Content-Type: application/json";
         // Initializing a cURL session
-
+     
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'https://stg.imepay.com.np:7979/api/Web/GetToken');
+        curl_setopt($ch, CURLOPT_URL, 'https://payment.imepay.com.np:7979/api/Web/GetToken');
         curl_setopt($ch, CURLOPT_HTTPHEADER, $header_array);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
         $result = curl_exec($ch);
-
+        // dd($result);
         curl_close($ch);
 
         return $result;
@@ -97,7 +99,7 @@ class ImePayController extends Controller
         $header_array[] = "Content-Type: application/json";
         // Initializing a cURL session
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'https://stg.imepay.com.np:7979/api/Web/Confirm');
+        curl_setopt($ch, CURLOPT_URL, 'https://payment.imepay.com.np:7979/api/Web/Confirm');
         curl_setopt($ch, CURLOPT_HTTPHEADER, $header_array);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
@@ -119,7 +121,7 @@ class ImePayController extends Controller
         $header_array[] = "Content-Type: application/json";
         // Initializing a cURL session
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'https://stg.imepay.com.np:7979/api/Web/Recheck');
+        curl_setopt($ch, CURLOPT_URL, 'https://payment.imepay.com.np:7979/api/Web/Recheck');
         curl_setopt($ch, CURLOPT_HTTPHEADER, $header_array);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));

@@ -15,6 +15,9 @@
 Route::get('/demo/cron_1', 'DemoController@cron_1');
 Route::get('/demo/cron_2', 'DemoController@cron_2');
 
+Route::get('/send/message', 'SmsController@sendMessage');
+
+
 
 
 Auth::routes(['verify' => true]);
@@ -196,6 +199,8 @@ Route::group(['middleware' => ['auth']], function(){
 	Route::post('/products/sku_combination_edit', 'ProductController@sku_combination_edit')->name('products.sku_combination_edit');
 	Route::post('/products/featured', 'ProductController@updateFeatured')->name('products.featured');
 	Route::post('/products/published', 'ProductController@updatePublished')->name('products.published');
+	Route::post('/products/verified', 'ProductController@updateVerified')->name('products.verified');
+
 
 	Route::get('invoice/customer/{order_id}', 'InvoiceController@customer_invoice_download')->name('customer.invoice.download');
 	Route::get('invoice/seller/{order_id}', 'InvoiceController@seller_invoice_download')->name('seller.invoice.download');
